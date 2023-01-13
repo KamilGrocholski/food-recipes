@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+}
+
+@layer components {
+    .button {
+        @apply transition-all px-6 py-3 text-xs rounded-lg hover:shadow-lg shadow-md focus:shadow-none active:opacity-80 active:shadow-none disabled:pointer-events-none 
+    } 
+}
