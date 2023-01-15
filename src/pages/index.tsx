@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
-import MainLayout from "../components/MainLayout";
+import MainLayout from "../components/ui/MainLayout";
 
 import { api } from "../utils/api";
 
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MainLayout>
+      <MainLayout useContainer={true}>
         <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit laudantium, ex quae obcaecati dolores dolorum expedita pariatur magnam autem excepturi nobis labore voluptate quia inventore mollitia molestiae quisquam fuga quidem!</div>
 
         <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam incidunt dicta officia, labore eveniet tempore tenetur inventore veritatis sunt magni ratione sint ipsa quidem doloribus deserunt assumenda id quibusdam quia.

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { Recipe_GetOneById_Output } from "../../types/trpcTypeInfer"
 import { api } from "../../utils/api"
-import Divider from "./Divider"
+import Divider from "../common/Divider"
 import Rating from "./Rating"
 
 const Reviews: React.FC<Pick<Recipe_GetOneById_Output, 'reviews' | 'id' | '_count'>> = ({

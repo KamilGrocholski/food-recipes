@@ -1,5 +1,5 @@
 import React from 'react'
-import useUi from '../../store/ui.store'
+import useUi from '../../../store/ui.store'
 import Logo from './Logo'
 import Menu from './Menu'
 

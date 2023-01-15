@@ -1,5 +1,5 @@
 import Link from "next/link"
-import useUi from "../../store/ui.store"
+import useUi from "../../../store/ui.store"
 import config from "./config"
 
 const Menu = () => {

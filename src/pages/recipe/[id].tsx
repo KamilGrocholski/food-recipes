@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticPropsContext, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../components/ui/MainLayout";
 import RecipeScreen from "../../components/RecipeScreen/RecipeScreen";
 import { api } from "../../utils/api";
 
@@ -18,7 +18,7 @@ const Recipe: NextPage = () => {
 
             </Head>
 
-            <MainLayout>
+            <MainLayout useContainer={true}>
                 <RecipeScreen {...recipeQuery.data} />
             </MainLayout>
         </>

@@ -68,11 +68,11 @@ model VerificationToken {
 }
 
 model Ingredient {
-    id      Int      @id @default(autoincrement())
-    name    String   @unique
-    amount  Float
-    unit    String
-    recipes Recipe[]
+    id          Int    @id @default(autoincrement())
+    description String
+
+    recipe   Recipe @relation(fields: [recipeId], references: [id])
+    recipeId Int
 }
 
 model RecipeTag {
@@ -101,11 +101,12 @@ model Cousine {
 
 model Recipe {
     id            Int     @id @default(autoincrement())
-    name          String  @unique
+    title         String
     description   String
     image         String
     cookTimeInMin Int
     prepTimeInMin Int
+    servings      Int
     isPublished   Boolean @default(false)
 
     author       User          @relation(fields: [authorId], references: [id])
