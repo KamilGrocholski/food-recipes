@@ -7,7 +7,6 @@ export type IngredientSchema = z.infer<typeof ingredientSchema>
 export type InfoSchema = z.infer<typeof infoSchema>
 export type RecipeSchema = z.infer<typeof recipeSchema>
 
-
 // Review
 
 export const reviewBase = {
@@ -56,6 +55,7 @@ export const instructionSchema = z.object({
 export const ingredientBase = {
     id: z.number(),
     description: z.string().trim()
+        // .min(1)
         .max(55, {message: 'Max. 55 characters'})
 }     
 

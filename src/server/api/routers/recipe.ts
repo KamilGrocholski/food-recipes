@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
-import { infoBase, recipeSchema, reviewBase, reviewSchema } from "../../schema/recipe.schema";
+import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -91,10 +91,10 @@ export const recipeRouter = createTRPCRouter({
           .mutation(async ({ ctx, input }) => {
             const { recipeId, comment, rating } = input
 
-            void assureRecipeIsNotOwner(ctx, recipeId)
-            void assureReviewIsNotAdded(ctx, recipeId)
+            await assureRecipeIsNotOwner(ctx, recipeId)
+            await assureReviewIsNotAdded(ctx, recipeId)
 
-            return ctx.prisma.review.create({
+            return await ctx.prisma.review.create({
               data: {
                 recipeId,
                 comment,
@@ -105,7 +105,7 @@ export const recipeRouter = createTRPCRouter({
           })
 });
 
-const selects = {
+export const selects = {
   publicRecipe: {
             id: true,
             title: true,

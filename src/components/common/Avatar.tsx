@@ -4,13 +4,13 @@ const Avatar: React.FC<{ src: string | undefined | null }> = ({
     src
 }) => {
     return (
-        <div className="h-16 w-16">
+        <div>
             <Image
                 src={src ?? ''}
                 alt='w'
-                layout="responsive"
-                width={110}
-                height={110}
+                layout="fixed"
+                width={60}
+                height={60}
                 className='rounded-full'
             />
         </div>

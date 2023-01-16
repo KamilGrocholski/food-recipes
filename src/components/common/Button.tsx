@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes } from "react"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning'
+    variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'accent'
     isLoading?: boolean
     loadingText?: string
     outline?: boolean
@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<ButtonProps> = ({
-    variant = 'primary',
+    variant = 'accent',
     isLoading,
     loadingText,
     outline,
@@ -21,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             className={`btn ${variantConfig[variant]} ${outline ? 'btn-outline' : ''} ${isLoading ? 'loading' : ''} ${className ? className : ''}`}
+            type='button'
             {...rest}
         >
             {isLoading && loadingText ? loadingText : content}
@@ -31,9 +32,10 @@ const Button: React.FC<ButtonProps> = ({
 export default Button
 
 const variantConfig = {
-    'primary': 'bg-primary',
-    'secondary': 'bg-secondary',
+    'primary': 'btn-primary',
+    'secondary': 'btn-secondary',
     'error': 'btn-error',
     'success': 'btn-success',
-    'warning': 'btn-warning'
+    'warning': 'btn-warning',
+    'accent': 'btn-accent'
 } as const

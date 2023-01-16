@@ -6,7 +6,7 @@ const RecipesListing: React.FC<{
 }> = ({ recipes }) => {
     return (
         <section className='w-fit mx-auto'>
-            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3'>
+            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 mx-3'>
                 {recipes.map((recipe, index) => (
                     <RecipeCard key={index} recipe={recipe} />
                 ))}

@@ -1,12 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useSession } from "next-auth/react"
-import { useState } from "react"
+import { type SubmitHandler, type SubmitErrorHandler, useForm, Controller } from "react-hook-form"
+import { type ReviewSchema, reviewSchema } from "../../server/schema/recipe.schema"
 import type { Recipe_GetOneById_Output } from "../../types/trpcTypeInfer"
 import { api } from "../../utils/api"
 import { parseDate } from "../../utils/parseDate"
 import Avatar from "../common/Avatar"
 import Button from "../common/Button"
 import Divider from "../common/Divider"
-import Rating from "./Rating"
+import TextArea from "../common/TextArea"
+import RatingReadOnly from "./Rating"
+import { StarRating } from "./Rating"
 
 const Reviews: React.FC<Pick<Recipe_GetOneById_Output, 'reviews' | 'id' | '_count'>> = ({
     reviews,
@@ -29,7 +33,7 @@ const Reviews: React.FC<Pick<Recipe_GetOneById_Output, 'reviews' | 'id' | '_coun
                                         <span>{review.author.name}</span>
                                         <span>{parseDate(review.createdAt)}</span>
                                     </div>
-                                    <Rating _count={_count} reviews={reviews} />
+                                    <RatingReadOnly rating={review.rating} showValue={false} />
                                 </div>
                                 <div>
                                     {review.comment}
@@ -48,34 +52,55 @@ export default Reviews
 const ReviewCreation: React.FC<Pick<Recipe_GetOneById_Output, 'id'>> = ({
     id
 }) => {
-    const [comment, setComment] = useState<string>('')
-    const [rating, setRating] = useState<number>(5)
     const addReviewMutation = api.recipe.addReview.useMutation()
 
-    const handleAddReview = (e: React.FormEvent) => {
-        e.preventDefault()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        control
+    } = useForm<ReviewSchema>({
+        resolver: zodResolver(reviewSchema),
+        mode: 'onSubmit',
+        shouldFocusError: false,
+    })
 
+
+    const { data: session } = useSession()
+
+    const handleOnValid: SubmitHandler<ReviewSchema> = (data, e) => {
+        e?.preventDefault()
         addReviewMutation.mutate({
-            comment,
-            recipeId: id,
-            rating
+            comment: data.comment,
+            rating: data.rating,
+            recipeId: id
         })
     }
 
-    const { data: session } = useSession()
+    const handleOnError: SubmitErrorHandler<ReviewSchema> = (data, e) => {
+        e?.preventDefault()
+        console.error({ data })
+    }
 
     return (
         <div>
             <Divider />
-            <form onSubmit={handleAddReview} className='flex flex-col space-y-3'>
+            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+            <form onSubmit={handleSubmit(handleOnValid, handleOnError)} className='flex flex-col space-y-3'>
                 <div className='flex flex-row space-x-3'>
                     <Avatar src={session?.user?.image} />
                     <div className='w-full'>
-                        <textarea
-                            className="textarea w-full"
-                            placeholder="Comment"
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
+                        <Controller
+                            control={control}
+                            name='rating'
+                            render={({ field }) => <StarRating value={field.value} stars={5} onChange={field.onChange} />}
+                        />
+                        <TextArea
+                            placeholder={'Comment'}
+                            border={false}
+                            inputSize='lg'
+                            {...register('comment')}
+                            errorMessage={errors.comment?.message}
                         />
                     </div>
                 </div>

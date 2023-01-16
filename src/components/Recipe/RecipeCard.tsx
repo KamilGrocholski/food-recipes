@@ -2,7 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { type RecipePublicQueryOutput } from "../../server/api/routers/recipe"
 import placeholder from '../../assets/placeholder.jpg'
-import Rating from "../RecipeScreen/Rating"
+import { getAvgRecipeRating } from "../RecipeScreen/Rating"
+import RatingReadOnly from "../RecipeScreen/Rating"
 
 const RecipeCard: React.FC<{
     recipe: RecipePublicQueryOutput
@@ -30,7 +31,7 @@ const RecipeCard: React.FC<{
                             <span className='transition-all duration-300 ease-in-out text-lg group-hover:text-primary'>{recipe.title}</span>
                             {/* <span className='text-sm text-gray-500 overflow-hidden truncate max-w-[200px]'>{recipe.description}</span> */}
                         </div>
-                        <Rating _count={recipe._count} reviews={recipe.reviews} />
+                        <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={false} />
                     </div>
                     <div className='flex flex-col space-y-2'>
                         <div className='rounded-full overflow-hidden'>

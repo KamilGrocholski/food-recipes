@@ -1,7 +1,8 @@
 import type { Recipe_GetOneById_Output } from '../../types/trpcTypeInfer'
 import Ingredients from './Ingredients'
-import Instructions from './Instructionts'
+import Instructions from './Instructions'
 import Reviews from './Reviews'
+import Tags from './Tags'
 
 const Details: React.FC<Recipe_GetOneById_Output> = (recipe) => {
     return (
@@ -9,6 +10,7 @@ const Details: React.FC<Recipe_GetOneById_Output> = (recipe) => {
             <div className='flex flex-col w-full justify-start space-y-12'>
                 <Ingredients {...recipe} />
                 <Instructions {...recipe} />
+                <Tags {...recipe} />
                 <Reviews {...recipe} />
             </div>
         </div>

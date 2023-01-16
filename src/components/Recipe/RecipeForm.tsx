@@ -7,6 +7,7 @@ import TextArea from '../common/TextArea'
 import Divider from '../common/Divider'
 import { api } from '../../utils/api'
 import { useRouter } from 'next/router'
+import { Icons } from '../../assets/icons'
 
 export interface RecipeFormProps {
     onValid: SubmitHandler<RecipeSchema>
@@ -26,8 +27,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
         formState: { errors }
     } = useForm<RecipeSchema>({
         resolver: zodResolver(recipeSchema),
-        mode: 'onSubmit',
-        shouldFocusError: false,
+        mode: 'onChange',
+        shouldFocusError: true,
         defaultValues: {
             cookTimeInMin: 0,
             prepTimeInMin: 0
@@ -84,9 +85,12 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
     }
 
     return (
-        <div>
-            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-            <form className='flex flex-col w-full max-w-3xl mx-auto' onSubmit={handleSubmit(handleOnValid, handleOnError)}>
+        <div className='mx-3'>
+            <form
+                className='flex flex-col w-full max-w-3xl mx-auto'
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onSubmit={handleSubmit(handleOnValid, handleOnError)}
+            >
                 <section className='prose'>
                     <h2>Add a recipe</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia quam accusantium harum. Quos, ea omnis aspernatur numquam doloremque blanditiis! Itaque minus iure maxime totam est optio dolor quis rerum id.</p>
@@ -94,7 +98,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
 
                 <Divider />
 
-                <section className='flex flex-row justify-between'>
+                <section className='flex lg:flex-row flex-col justify-between'>
                     <div>
                         <Input
                             type='text'
@@ -105,10 +109,10 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         />
                         <Input
                             type='text'
-                            label='Title'
-                            placeholder='Title'
+                            label='Image'
+                            placeholder='Image'
                             {...register('image')}
-                            errorMessage={errors.title?.message}
+                            errorMessage={errors.image?.message}
                         />
                         <TextArea
                             label='Description'
@@ -132,7 +136,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                     <div className='flex flex-col space-y-3'>
                         {ingredients.map((field, index) => (
                             <div key={field.id}>
-                                <section key={index} className='flex flex-row space-x-1 items-end'>
+                                <section key={index} className='flex flex-row space-x-3 items-end'>
                                     <Input
                                         placeholder='Description'
                                         inputSize='md'
@@ -142,9 +146,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                                         errorMessage={errors?.ingredients?.[index]?.description?.message}
                                     />
                                     <Button
-                                        content={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                        </svg>}
+                                        content={Icons.trash}
                                         onClick={() => removeIngredient(index)}
                                         variant='error'
                                     />
@@ -153,11 +155,16 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         ))}
                     </div>
                     <Button
-                        content='Add Ingredient'
+                        content={Icons.plus}
                         className='mt-3'
-                        onClick={() => appendIngredient({
-                            description: ''
-                        })}
+                        onClick={e => {
+                            e.preventDefault()
+                            appendIngredient({
+                                description: ''
+                            }, {
+                                shouldFocus: true
+                            })
+                        }}
                     />
 
                 </section>
@@ -179,9 +186,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                                         errorMessage={errors?.instructions?.[index]?.description?.message}
                                     />
                                     <Button
-                                        content={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                        </svg>}
+                                        content={Icons.trash}
                                         onClick={() => removeInstruction(index)}
                                         variant='error'
                                     />
@@ -190,12 +195,17 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         ))}
                     </div>
                     <Button
-                        content='Add Instruction'
+                        content={Icons.plus}
                         className='mt-3'
-                        onClick={() => appendInstruction({
-                            description: '',
-                            number: instructions.length === 0 ? 1 : instructions.length + 2
-                        })}
+                        onClick={e => {
+                            e.preventDefault()
+                            appendInstruction({
+                                description: '',
+                                number: instructions.length === 0 ? 1 : instructions.length + 2
+                            }, {
+                                shouldFocus: true
+                            })
+                        }}
                     />
 
                 </section>
@@ -207,10 +217,10 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                     <div className='flex flex-col space-y-3'>
                         {tags.map((field, index) => (
                             <div key={field.id}>
-                                <section key={index} className='flex flex-row space-x-1 items-end'>
+                                <section key={index} className='flex flex-row space-x-3 items-end'>
                                     <Input
                                         placeholder='Tag'
-                                        inputSize='sm'
+                                        inputSize='md'
                                         border={true}
                                         labelPosition='top'
                                         {...register(`tags.${index}.name` as const)}
@@ -227,11 +237,16 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                     </div>
 
                     <Button
-                        content='Add Tag'
+                        content={Icons.plus}
                         className='mt-3'
-                        onClick={() => appendTag({
-                            name: ''
-                        })}
+                        onClick={e => {
+                            e.preventDefault()
+                            appendTag({
+                                name: ''
+                            }, {
+                                shouldFocus: true
+                            })
+                        }}
                     />
                 </section>
 

@@ -6,7 +6,7 @@ const NumbersInfo: React.FC<Pick<RecipePublicQueryOutput, '_count' | 'cookTimeIn
     prepTimeInMin
 }) => {
     return (
-        <div className="stats stats-vertical lg:stats-horizontal shadow">
+        <div className="stats stats-horizontal shadow">
 
             <div className="stat">
                 <div className="stat-value text-center">{_count.ingredients}</div>

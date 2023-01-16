@@ -57,6 +57,7 @@ model User {
     sessions      Session[]
     recipes       Recipe[]
     review        Review[]
+    folders       Folder[]
 }
 
 model VerificationToken {
@@ -105,6 +106,7 @@ model Recipe {
     ingredients  Ingredient[]
     instructions Instruction[]
     tags         Tag[]
+    folders      Folder[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -122,4 +124,14 @@ model Review {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Folder {
+    id   Int    @id @default(autoincrement())
+    name String
+
+    recipes Recipe[]
+
+    owner   User   @relation(fields: [ownerId], references: [id])
+    ownerId String
 }

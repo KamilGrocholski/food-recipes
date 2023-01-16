@@ -6,6 +6,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string
     errorMessage?: string
     labelPosition?: 'top' | 'bottom'
+    variant?: 'primary' | 'secondary' | 'accent' | 'error' | 'success' | 'warning'
 }
 
 // eslint-disable-next-line react/display-name
@@ -15,6 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     label,
     errorMessage,
     labelPosition = 'top',
+    variant,
     ...rest
 }, ref) => {
     return (
@@ -25,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             </label> : null}
             <input
                 ref={ref}
-                className={`input ${sizeConfig[inputSize]} ${border ? 'input-bordered' : ''} w-full max-w-xs ${errorMessage ? indicativeStateConfig['error'] : ''}`}
+                className={`input ${sizeConfig[inputSize]} ${border ? 'input-bordered' : ''} w-full max-w-xs ${errorMessage ? variantConfig['error'] : ''} ${variant ? variantConfig[variant] : ''}`}
                 {...rest}
             />
             {labelPosition === 'bottom' ? <label className="label">
@@ -45,8 +47,11 @@ const sizeConfig = {
     'lg': 'input-lg'
 } as const
 
-const indicativeStateConfig = {
+const variantConfig = {
     'error': 'input-error',
     'warning': 'input-warning',
-    'success': 'input-success'
+    'success': 'input-success',
+    'primary': 'input-primary',
+    'secondary': 'input-secondary',
+    'accent': 'input-accent'
 } as const
