@@ -1,6 +1,11 @@
 import { z } from "zod";
-
+import { type RouterOutputs } from "../../../utils/api";
+import { infoBase, recipeSchema, reviewBase, reviewSchema } from "../../schema/recipe.schema";
+import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
+import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+
+export type RecipePublicQueryOutput = NonNullable<RouterOutputs['recipe']['getOneById']>
 
 export const recipeRouter = createTRPCRouter({
   infiniteRecipes: publicProcedure
@@ -11,14 +16,13 @@ export const recipeRouter = createTRPCRouter({
 
       const recipes = await ctx.prisma.recipe.findMany({
         take: limit + 1,
-        where: {
-          isPublished: true
-        },
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           id: 'desc'
-        }
+        },
+        select: selects.publicRecipe
       })
+
 
       let nextCursor: typeof cursor | undefined = undefined
       if (recipes.length > 1) {
@@ -36,30 +40,89 @@ export const recipeRouter = createTRPCRouter({
       .input(z.object({
         id: z.number()
       }))
-      .query(({ ctx, input }) => {
+      .query(async ({ ctx, input }) => {
         return ctx.prisma.recipe.findUnique({
           where: {
             id: input.id,
           },
-          select: {
+          select: selects.publicRecipe
+        })
+      }),
+
+      create: protectedProcedure
+        .input(recipeSchema)
+        .mutation(({ ctx, input }) => {
+          const {
+            title,
+            description,
+            image,
+            cookTimeInMin,
+            prepTimeInMin,
+            ingredients,
+            instructions,
+            tags
+          } = input 
+
+          return ctx.prisma.recipe.create({
+            data: {
+              title,
+              description,
+              image,
+              cookTimeInMin,
+              prepTimeInMin,
+              authorId: ctx.session.user.id,
+              ingredients: {
+                create: ingredients
+              },
+              instructions: {
+                create: instructions
+              },
+              tags: {
+                create: tags
+              }
+            }
+          })
+        }),
+
+        addReview: protectedProcedure
+          .input(reviewSchema.extend({
+            recipeId: infoBase.id
+          }))
+          .mutation(async ({ ctx, input }) => {
+            const { recipeId, comment, rating } = input
+
+            void assureRecipeIsNotOwner(ctx, recipeId)
+            void assureReviewIsNotAdded(ctx, recipeId)
+
+            return ctx.prisma.review.create({
+              data: {
+                recipeId,
+                comment,
+                rating,
+                authorId: ctx.session.user.id
+              }
+            })
+          })
+});
+
+const selects = {
+  publicRecipe: {
             id: true,
-            name: true,
+            title: true,
             description: true,
             cookTimeInMin: true,
             prepTimeInMin: true,
             image: true,
             author: {
-              select: {
-                id: true,
-                name: true,
-                image: true
-              }
-            },
+                  select: {
+                    image: true,
+                    name: true,
+                    id: true
+                  }
+                },
             ingredients: {
               select: {
-                name: true,
-                amount: true,
-                unit: true
+                description: true
               }
             },
             instructions: {
@@ -75,9 +138,16 @@ export const recipeRouter = createTRPCRouter({
                 rating: true,
                 comment: true,
                 createdAt: true,
+                author: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true
+                  }
+                }
               }
             },
-            recipeTags: {
+            tags: {
               select: {
                 id: true,
                 name: true
@@ -87,84 +157,9 @@ export const recipeRouter = createTRPCRouter({
               select: {
                 reviews: true,
                 ingredients: true,
-                instructions: true
+                instructions: true,
+                tags: true
               }
             }
-          }
-        })
-      }),
-
-      create: protectedProcedure
-        .input(z.object({
-          name: z.string().min(5).max(25),
-          description: z.string(),
-          image: z.string(),
-          cookTimeInMin: z.number(),
-          prepTimeInMin: z.number(),
-          cousineId: z.number(),
-          ingredients: z.array(z.object({
-            name: z.string(),
-            amount: z.number(),
-            unit: z.string()
-          })),
-          instructions: z.array(z.object({
-            number: z.number(),
-            description: z.string()
-          })),
-          recipeTags: z.array(z.object({
-            name: z.string()
-          }))
-        }))
-        .mutation(({ ctx, input }) => {
-          const {
-            name,
-            description,
-            image,
-            cookTimeInMin,
-            prepTimeInMin,
-            cousineId,
-            ingredients,
-            instructions,
-            recipeTags
-          } = input 
-
-          return ctx.prisma.recipe.create({
-            data: {
-              name,
-              description,
-              image,
-              cookTimeInMin,
-              prepTimeInMin,
-              cousineId,
-              authorId: ctx.session.user.id,
-              ingredients: {
-                create: ingredients
-              },
-              instructions: {
-                create: instructions
-              },
-              recipeTags: {
-                create: recipeTags
-              }
-            }
-          })
-        }),
-
-        addReview: protectedProcedure
-          .input(z.object({
-            recipeId: z.number(),
-            comment: z.string().min(5).max(55),
-            rating: z.number().min(0).max(5)
-          }))
-          .mutation(({ ctx, input }) => {
-            const { recipeId, comment, rating } = input
-
-            return ctx.prisma.review.create({
-              data: {
-                recipeId,
-                comment,
-                rating
-              }
-            })
-          })
-});
+  }
+}

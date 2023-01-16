@@ -6,7 +6,7 @@ interface State {
 }
 
 const useUi = create<State>(set => ({
-    isSideNavOpen: true,
+    isSideNavOpen: false,
     setIsSideNavOpen: (bool) => set(() => ({ isSideNavOpen: bool }))
 }))
 

@@ -1,6 +1,10 @@
+import { useSession } from "next-auth/react"
 import { useState } from "react"
 import type { Recipe_GetOneById_Output } from "../../types/trpcTypeInfer"
 import { api } from "../../utils/api"
+import { parseDate } from "../../utils/parseDate"
+import Avatar from "../common/Avatar"
+import Button from "../common/Button"
 import Divider from "../common/Divider"
 import Rating from "./Rating"
 
@@ -9,37 +13,32 @@ const Reviews: React.FC<Pick<Recipe_GetOneById_Output, 'reviews' | 'id' | '_coun
     id,
     _count
 }) => {
+
     return (
         <section className='prose'>
             <h2>Reviews({_count.reviews})</h2>
             <ReviewCreation id={id} />
-            <ul>
+            <div className='flex flex-col space-y-16'>
                 {reviews.map((review, i) => (
-                    <li key={i}>
-                        <div>
-                            <div>
-                                <div className="avatar">
-                                    <div className="w-24 rounded-full">
-                                        <img src="https://placeimg.com/192/192/people" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className='flex flex-row space-x-3'>
-                                    <span>{'imie'}</span>
-                                    <span>{review.createdAt.toString()}</span>
-                                </div>
+                    <div key={i}>
+                        <div className='flex flex-row space-x-2'>
+                            <Avatar src={review.author.image} />
+                            <div className='flex flex-col space-y-3'>
                                 <div>
-                                    <Rating reviews={reviews} _count={_count} />
+                                    <div className='flex flex-row space-x-3'>
+                                        <span>{review.author.name}</span>
+                                        <span>{parseDate(review.createdAt)}</span>
+                                    </div>
+                                    <Rating _count={_count} reviews={reviews} />
                                 </div>
                                 <div>
                                     {review.comment}
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </section>
     )
 }
@@ -63,17 +62,29 @@ const ReviewCreation: React.FC<Pick<Recipe_GetOneById_Output, 'id'>> = ({
         })
     }
 
+    const { data: session } = useSession()
+
     return (
         <div>
             <Divider />
-            <form onSubmit={handleAddReview}>
-                <textarea
-                    className="textarea textarea-bordered"
-                    placeholder="Bio"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
+            <form onSubmit={handleAddReview} className='flex flex-col space-y-3'>
+                <div className='flex flex-row space-x-3'>
+                    <Avatar src={session?.user?.image} />
+                    <div className='w-full'>
+                        <textarea
+                            className="textarea w-full"
+                            placeholder="Comment"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <Button
+                    type='submit'
+                    content={'Add Review'}
+                    variant='primary'
+                    className='w-fit self-end'
                 />
-                <button type='submit'>Add review</button>
             </form>
             <Divider />
         </div>

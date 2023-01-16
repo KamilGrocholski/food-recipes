@@ -1,3 +1,5 @@
+import Loader from "./Loader"
+
 interface StateWrapperProps<T> {
     isLoading: boolean
     isError: boolean
@@ -30,6 +32,6 @@ const StateWrapper = <T,>({
 
 export default StateWrapper
 
-const DefaultLoading = <div>Loading...</div>
+const DefaultLoading = <div><Loader /></div>
 const DefaultError = <div>Error</div>
 const DefaultEmpty = <div>Empty</div>

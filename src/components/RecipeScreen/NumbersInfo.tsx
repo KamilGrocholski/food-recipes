@@ -1,25 +1,21 @@
-import React from 'react'
+import { type RecipePublicQueryOutput } from "../../server/api/routers/recipe"
 
-const NumbersInfo = () => {
+const NumbersInfo: React.FC<Pick<RecipePublicQueryOutput, '_count' | 'cookTimeInMin' | 'prepTimeInMin'>> = ({
+    _count,
+    cookTimeInMin,
+    prepTimeInMin
+}) => {
     return (
         <div className="stats stats-vertical lg:stats-horizontal shadow">
 
             <div className="stat">
-                <div className="stat-title">Downloads</div>
-                <div className="stat-value">31K</div>
-                <div className="stat-desc">Jan 1st - Feb 1st</div>
+                <div className="stat-value text-center">{_count.ingredients}</div>
+                <div className='stat-desc'>Ingredients</div>
             </div>
 
             <div className="stat">
-                <div className="stat-title">New Users</div>
-                <div className="stat-value">4,200</div>
-                <div className="stat-desc">↗︎ 400 (22%)</div>
-            </div>
-
-            <div className="stat">
-                <div className="stat-title">New Registers</div>
-                <div className="stat-value">1,200</div>
-                <div className="stat-desc">↘︎ 90 (14%)</div>
+                <div className="stat-value text-center">{prepTimeInMin + cookTimeInMin}</div>
+                <div className='stat-desc'>Minutes</div>
             </div>
 
         </div>

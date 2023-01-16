@@ -7,12 +7,12 @@ import Rating from './Rating'
 
 const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
     return (
-        <div className='mx-auto max-w-[978px] w-full'>
-            <section className='flex flex-row w-full'>
+        <div className='mx-auto max-w-[768px] w-full'>
+            <section className='flex flex-row w-full justify-between'>
                 <article className='flex flex-col prose'>
                     <h1>{recipe.title}</h1>
                     <Rating {...recipe} />
-                    <NumbersInfo />
+                    <NumbersInfo {...recipe} />
                 </article>
 
                 <div>

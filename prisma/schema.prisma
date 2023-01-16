@@ -56,7 +56,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     recipes       Recipe[]
-    Review        Review[]
+    review        Review[]
 }
 
 model VerificationToken {
@@ -75,11 +75,10 @@ model Ingredient {
     recipeId Int
 }
 
-model RecipeTag {
-    id       Int     @id @default(autoincrement())
-    name     String  @unique
-    recipe   Recipe? @relation(fields: [recipeId], references: [id])
-    recipeId Int?
+model Tag {
+    id     Int      @id @default(autoincrement())
+    name   String   @unique
+    recipe Recipe[]
 }
 
 model Instruction {
@@ -91,14 +90,6 @@ model Instruction {
     recipeId Int
 }
 
-model Cousine {
-    id    Int    @id @default(autoincrement())
-    name  String @unique
-    image String
-
-    recipe Recipe[]
-}
-
 model Recipe {
     id            Int     @id @default(autoincrement())
     title         String
@@ -106,17 +97,14 @@ model Recipe {
     image         String
     cookTimeInMin Int
     prepTimeInMin Int
-    servings      Int
     isPublished   Boolean @default(false)
 
     author       User          @relation(fields: [authorId], references: [id])
     authorId     String
-    cousine      Cousine       @relation(fields: [cousineId], references: [id])
-    cousineId    Int
     reviews      Review[]
     ingredients  Ingredient[]
     instructions Instruction[]
-    recipeTags   RecipeTag[]
+    tags         Tag[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

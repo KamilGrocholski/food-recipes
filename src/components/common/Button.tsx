@@ -6,6 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     loadingText?: string
     outline?: boolean
     content: React.ReactNode
+    className?: string
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,12 +15,13 @@ const Button: React.FC<ButtonProps> = ({
     loadingText,
     outline,
     content,
+    className,
     ...rest
 }) => {
     return (
         <button
+            className={`btn ${variantConfig[variant]} ${outline ? 'btn-outline' : ''} ${isLoading ? 'loading' : ''} ${className ? className : ''}`}
             {...rest}
-            className={`btn ${variantConfig[variant]} ${outline ? 'btn-outline' : ''} ${isLoading ? 'loading' : ''}`}
         >
             {isLoading && loadingText ? loadingText : content}
         </button>

@@ -1,10 +1,25 @@
 import { z } from "zod";
 
+export type ReviewSchema = z.infer<typeof reviewSchema>
 export type TagSchema = z.infer<typeof tagSchema>
 export type InstructionSchema = z.infer<typeof instructionSchema>
 export type IngredientSchema = z.infer<typeof ingredientSchema>
 export type InfoSchema = z.infer<typeof infoSchema>
 export type RecipeSchema = z.infer<typeof recipeSchema>
+
+
+// Review
+
+export const reviewBase = {
+    id: z.number(),
+    comment: z.string().min(1).max(255),
+    rating: z.number().min(0).max(5)
+} 
+
+export const reviewSchema = z.object({
+    comment: reviewBase.comment,
+    rating: reviewBase.rating
+})
 
 // Tag 
 
@@ -24,12 +39,14 @@ export const tagSchema = z.object({
 
 export const instructionBase = {
     id: z.number(),
+    number: z.number().min(1).max(100),
     description: z.string().trim()
         .min(1, {message: 'Min. 1 character'})
         .max(255, {message: 'Max. 255 characters'})
 }
 
 export const instructionSchema = z.object({
+    number: instructionBase.number,
     description: instructionBase.description
 })
 
@@ -47,7 +64,7 @@ export const ingredientSchema = z.object({
 })
 
 
-// Recipe
+// Info
 
 export const infoBase = {
     id: z.number(),
@@ -55,7 +72,8 @@ export const infoBase = {
         .min(5, {message: 'Min. 5 character'})
         .max(55, {message: 'Max. 55 characters'}),
     description: z.string().trim()
-        .max(1, {message: 'Max. 255 character'}),
+        .max(255, {message: 'Max. 255 character'}),
+    image: z.string().url(),
     cookTimeInMin: z.number()
         .min(0, {message: 'Min. 1 minute'})
         .max(9999, {message: '9999 is the maximum'}),
@@ -68,6 +86,7 @@ export const infoBase = {
 export const infoSchema = z.object({
     title: infoBase.title,
     description: infoBase.description,
+    image: infoBase.image,
     cookTimeInMin: infoBase.cookTimeInMin,
     prepTimeInMin: infoBase.prepTimeInMin,
     isPublished: infoBase.isPublished
@@ -78,8 +97,11 @@ export const infoSchema = z.object({
 
 export const recipeSchema = infoSchema
     .extend({
-        ingredients: z.array(ingredientSchema)
+        ingredients: z.array(ingredientSchema).optional()
     })
     .extend({
-        tags: z.array(tagSchema)
+        tags: z.array(tagSchema).optional()
+    })
+    .extend({
+        instructions: z.array(instructionSchema).optional()
     })

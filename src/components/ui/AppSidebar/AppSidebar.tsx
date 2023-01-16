@@ -1,16 +1,21 @@
-import React from 'react'
-import useUi from '../../../store/ui.store'
+import { signIn, useSession } from 'next-auth/react'
+import Avatar from '../../common/Avatar'
 import Logo from './Logo'
 import Menu from './Menu'
 
 const AppSidebar = () => {
-    const isSideNavOpen = useUi(state => state.isSideNavOpen)
-    const setIsSideNavOpen = useUi(state => state.setIsSideNavOpen)
+    const handleSignIn = () => {
+        void signIn('discord')
+    }
+
+    const { data: session } = useSession()
 
     return (
-        <aside className={`transition-all overflow-x-hidden duration-500 ease flex flex-col h-screen shadow-gray-300 shadow-xl z-50 ${isSideNavOpen ? 'w-[278px]' : 'w-[72px]'}`}>
-            <button className='z-50 h-12 bg-red-500' onClick={() => setIsSideNavOpen(!isSideNavOpen)}>SDSAD</button>
+        <aside className={`transition-all overflow-x-hidden duration-500 ease flex flex-col pt-16 h-screen shadow-gray-300 shadow-xl z-50`}>
             <Logo />
+            <button onClick={handleSignIn} className='mx-auto w-fit'>
+                <Avatar src={session?.user?.image} />
+            </button>
             <Menu />
         </aside>
     )
