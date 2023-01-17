@@ -6,7 +6,7 @@ import config from "./config"
 const Menu = () => {
 
     return (
-        <section className='w-max flex-col space-y-3 overflow-x-hidden overflow-y-scroll'>
+        <section className='w-52 flex-col space-y-3 overflow-x-hidden overflow-y-scroll'>
             <div className='menu menu-compact bg-base-100 w-full mt-5'>
                 {config.links.map((link, i) => (
                     <li key={i}>

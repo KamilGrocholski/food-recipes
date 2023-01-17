@@ -1,10 +1,6 @@
 import type { Folder } from "@prisma/client"
 import { useRouter } from "next/router"
-import React, { useState } from "react"
 import { Icons } from "../../assets/icons"
-import { api } from "../../utils/api"
-import Input from "../common/Input"
-import StateWrapper from "../common/StateWrapper"
 
 const FoldersListing: React.FC<{
     folders: {

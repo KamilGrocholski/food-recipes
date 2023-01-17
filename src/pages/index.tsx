@@ -12,12 +12,6 @@ const Home: NextPage = () => {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
 
-  const recipeQuery = api.recipe.getOneById.useQuery({ id: 1 })
-
-  const handleSignIn = () => {
-    void signIn('discord')
-  }
-
   return (
     <>
       <Head>

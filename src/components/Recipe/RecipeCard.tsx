@@ -4,14 +4,43 @@ import { type RecipePublicQueryOutput } from "../../server/api/routers/recipe"
 import placeholder from '../../assets/placeholder.jpg'
 import { getAvgRecipeRating } from "../RecipeScreen/Rating"
 import RatingReadOnly from "../RecipeScreen/Rating"
+import Button from "../common/Button"
+import AddToRecipeToFolderModal from "../Folder/AddToRecipeToFolderModal"
+import { useState } from "react"
+import { Icons } from "../../assets/icons"
 
-const RecipeCard: React.FC<{
-    recipe: RecipePublicQueryOutput
-}> = ({ recipe }) => {
+interface RecipeCardProps<T = RecipePublicQueryOutput> {
+    recipe: T,
+}
+
+const RecipeCard = ({
+    recipe,
+}: RecipeCardProps): JSX.Element => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
     return (
-        <div className='group'>
-            <Link href={`recipes/${recipe.id}`}>
+        <div className='group z-0'>
+            <AddToRecipeToFolderModal
+                isOpen={isModalOpen}
+                close={() => setIsModalOpen(false)}
+                recipeId={recipe.id}
+                image={recipe.image}
+                title={recipe.title}
+            />
+            <Link href={`/recipes/${recipe.id}`}>
                 <div className='relative overflow-hidden'>
+                    <Button
+                        content={Icons.plus}
+                        shape='circle'
+                        variant='ghost'
+                        size='sm'
+                        onClick={(e) => {
+                            e.nativeEvent.preventDefault()
+                            e.stopPropagation()
+                            setIsModalOpen(true)
+                        }}
+                        className='absolute top-1 right-1'
+                    />
                     <Image
                         // src={recipe.image}
                         src={placeholder}
@@ -43,7 +72,7 @@ const RecipeCard: React.FC<{
                                 height={40}
                             />
                         </div>
-                        <div>3132</div>
+                        <div>{recipe.views}</div>
                     </div>
                 </div>
             </Link>

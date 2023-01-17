@@ -70,7 +70,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
     const createRecipe = api.recipe.create.useMutation({
         onError: (error) => console.log(error),
         onSuccess: (data) => {
-            void router.push(`/recipe/${data.id}`)
+            void router.push(`/recipes/${data.id}`)
         }
     })
 
@@ -283,7 +283,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         <Input
                             label='Make it public'
                             type='checkbox'
-                            className='checkbox'
+                            className='checkbox h-8 w-8 checkbox-accent'
                             defaultChecked={false}
                             {...register('isPublished')}
                         />

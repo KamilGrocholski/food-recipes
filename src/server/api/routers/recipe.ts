@@ -41,9 +41,20 @@ export const recipeRouter = createTRPCRouter({
         id: z.number()
       }))
       .query(async ({ ctx, input }) => {
+        await ctx.prisma.recipe.update({
+          where: {
+            id: input.id
+          },
+          data: {
+            views: {
+              increment: 1
+            }
+          }
+        })
+
         return ctx.prisma.recipe.findUnique({
           where: {
-            id: input.id,
+            id: input.id
           },
           select: selects.publicRecipe
         })
@@ -113,6 +124,7 @@ export const selects = {
             cookTimeInMin: true,
             prepTimeInMin: true,
             image: true,
+            views: true,
             author: {
                   select: {
                     image: true,

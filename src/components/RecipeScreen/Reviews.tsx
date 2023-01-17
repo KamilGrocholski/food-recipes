@@ -107,7 +107,6 @@ const ReviewCreation: React.FC<Pick<Recipe_GetOneById_Output, 'id'>> = ({
                 <Button
                     type='submit'
                     content={'Add Review'}
-                    variant='primary'
                     className='w-fit self-end'
                 />
             </form>

@@ -8,6 +8,7 @@ import AddToRecipeToFolderModal from '../Folder/AddToRecipeToFolderModal'
 import NumbersInfo from './NumbersInfo'
 import RatingReadOnly, { getAvgRecipeRating } from './Rating'
 import placeholder from '../../assets/placeholder.jpg'
+import { Icons } from '../../assets/icons'
 
 const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -25,10 +26,11 @@ const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
             <section className='flex flex-col lg:flex-row w-full justify-between'>
                 <article className='flex flex-col space-y-4 prose'>
                     <h1>{recipe.title}</h1>
+                    <span className='text-lg font-semibold'>{recipe.views}</span>
                     <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={true} />
                     <NumbersInfo {...recipe} />
                     <Button
-                        content={'Add'}
+                        content={<div className='flex flex-row space-x-1 items-center'><span>{Icons.plus}</span> <span>Add to Collection</span></div>}
                         variant='accent'
                         onClick={() => setIsModalOpen(true)}
                     />

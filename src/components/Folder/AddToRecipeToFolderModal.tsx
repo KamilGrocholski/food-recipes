@@ -20,8 +20,15 @@ const AddToRecipeToFolderModal: React.FC<{
     title,
     recipeId
 }) => {
-        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery()
-        const addToFoldersMutation = api.folder.addRecipeToFolders.useMutation()
+        const utils = api.useContext()
+
+        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery({ recipeId })
+        const addToFoldersMutation = api.folder.addRecipeToFolders.useMutation({
+            onSuccess: () => {
+                close()
+                void utils.folder.getAllByCurrentUserId.invalidate({ recipeId })
+            }
+        })
 
         const [checkedIds, setCheckedIds] = useState<Folder['id'][]>([])
 
@@ -44,9 +51,9 @@ const AddToRecipeToFolderModal: React.FC<{
             <Dialog open={isOpen} onClose={close} className='relative z-50'>
 
                 <div className="fixed inset-0 flex items-center justify-center bg-black/70 p-4">
-                    <Dialog.Panel className="w-full max-w-sm rounded bg-white p-3">
-                        <Dialog.Title className='prose'>
-                            <h3>Add the recipe to your collections</h3>
+                    <Dialog.Panel className="w-full max-w-sm rounded bg-white p-3 prose">
+                        <Dialog.Title as='h3'>
+                            Add the recipe to your collections
                         </Dialog.Title>
                         <Dialog.Description>
                             Select collections by clicking on them and press the confirm button
@@ -72,6 +79,7 @@ const AddToRecipeToFolderModal: React.FC<{
                                 data={foldersQuery.data}
                                 isLoading={foldersQuery.isLoading}
                                 isError={foldersQuery.isError}
+                                Empty={<div className='my-3 p-3'>Looks like the recipe is in every collection.</div>}
                                 NonEmpty={(folders) =>
                                     <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
                                         {folders.map((folder, index) => (

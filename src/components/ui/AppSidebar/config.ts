@@ -1,7 +1,7 @@
 const config = {
     links: [
         {label: 'Check Recipes', href: '/'},
-        {label: 'Add a Recipe', href: '/recipe/new'},
+        {label: 'Add a Recipe', href: '/recipes/new'},
     ]
 }
 

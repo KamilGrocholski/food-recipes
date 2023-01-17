@@ -100,6 +100,8 @@ model Recipe {
     prepTimeInMin Int
     isPublished   Boolean @default(false)
 
+    views Int @default(0)
+
     author       User          @relation(fields: [authorId], references: [id])
     authorId     String
     reviews      Review[]
@@ -108,8 +110,9 @@ model Recipe {
     tags         Tag[]
     folders      Folder[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    viewsCounterId Int?
 }
 
 model Review {

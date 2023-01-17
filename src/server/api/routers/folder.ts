@@ -1,5 +1,7 @@
 import { type inferRouterOutputs } from "@trpc/server";
+import { z } from "zod";
 import { addRecipeToFoldersSchema, createFolderSchema, getOneFolderSchema, removeFolderSchema, updateFolderSchema } from "../../schema/folder.schema";
+import { infoBase } from "../../schema/recipe.schema";
 import { assureIsFolderOwner } from "../middlewares/assureIsFolderOwner";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { selects as recipeSelects } from "./recipe";
@@ -68,10 +70,18 @@ export const folderRouter = createTRPCRouter({
         }),
     
     getAllByCurrentUserId: protectedProcedure
-        .query(({ctx}) => {
+        .input(z.object({
+            recipeId: infoBase.id.optional()
+        }))
+        .query(({ctx, input}) => {
             return ctx.prisma.folder.findMany({
                 where: {
-                    ownerId: ctx.session.user.id
+                    ownerId: ctx.session.user.id,
+                    recipes: input.recipeId ? {
+                        none: {
+                            id: input.recipeId
+                        }
+                    } : undefined
                 },
                 select: {
                     id: true,
