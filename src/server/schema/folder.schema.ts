@@ -4,7 +4,7 @@ import { infoBase } from "./recipe.schema";
 export type CreateFolderSchema = z.infer<typeof createFolderSchema>
 export type UpdateFolderSchema = z.infer<typeof updateFolderSchema>
 export type RemoveFolderSchema = z.infer<typeof removeFolderSchema>
-export type AddRecipeToFolderSchema = z.infer<typeof addRecipeToFolderSchema>
+export type AddRecipeToFolderSchema = z.infer<typeof addRecipeToFoldersSchema>
 
 export const folderBase = {
     id: z.number(),
@@ -24,8 +24,8 @@ export const removeFolderSchema = z.object({
     id: folderBase.id
 })
 
-export const addRecipeToFolderSchema = z.object({
-    folderId: folderBase.id,
+export const addRecipeToFoldersSchema = z.object({
+    foldersIds: folderBase.id.array(),
     recipeId: infoBase.id
 })
 

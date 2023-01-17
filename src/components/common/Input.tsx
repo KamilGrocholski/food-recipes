@@ -7,6 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     errorMessage?: string
     labelPosition?: 'top' | 'bottom'
     variant?: 'primary' | 'secondary' | 'accent' | 'error' | 'success' | 'warning'
+    className?: string
 }
 
 // eslint-disable-next-line react/display-name
@@ -17,6 +18,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     errorMessage,
     labelPosition = 'top',
     variant,
+    className,
     ...rest
 }, ref) => {
     return (
@@ -27,7 +29,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             </label> : null}
             <input
                 ref={ref}
-                className={`input ${sizeConfig[inputSize]} ${border ? 'input-bordered' : ''} w-full max-w-xs ${errorMessage ? variantConfig['error'] : ''} ${variant ? variantConfig[variant] : ''}`}
+                className={`${className ? className : ''} input ${sizeConfig[inputSize]} ${border ? 'input-bordered' : ''} w-full max-w-xs ${errorMessage ? variantConfig['error'] : ''} ${variant ? variantConfig[variant] : ''}`}
                 {...rest}
             />
             {labelPosition === 'bottom' ? <label className="label">

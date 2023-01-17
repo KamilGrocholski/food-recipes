@@ -1,7 +1,10 @@
-import { addRecipeToFolderSchema, createFolderSchema, getOneFolderSchema, removeFolderSchema, updateFolderSchema } from "../../schema/folder.schema";
+import { type inferRouterOutputs } from "@trpc/server";
+import { addRecipeToFoldersSchema, createFolderSchema, getOneFolderSchema, removeFolderSchema, updateFolderSchema } from "../../schema/folder.schema";
 import { assureIsFolderOwner } from "../middlewares/assureIsFolderOwner";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { selects as recipeSelects } from "./recipe";
+
+export type FolderRouter = inferRouterOutputs<typeof folderRouter>
 
 export const folderRouter = createTRPCRouter({
   create: protectedProcedure
@@ -45,22 +48,20 @@ export const folderRouter = createTRPCRouter({
             })
         }),
 
-    addRecipeToFolder: protectedProcedure
-        .input(addRecipeToFolderSchema)
+    addRecipeToFolders: protectedProcedure
+        .input(addRecipeToFoldersSchema)
         .mutation(async ({ctx, input}) => {
-            const { recipeId, folderId } = input
+            const { recipeId, foldersIds } = input
 
-            await assureIsFolderOwner(ctx, folderId)
+            // await assureIsFolderOwner(ctx, folderId)
 
-            return await ctx.prisma.folder.update({
+            return await ctx.prisma.recipe.update({
                 where: {
-                    id: folderId
+                    id: recipeId,
                 },
                 data: {
-                    recipes: {
-                        connect: {
-                            id: recipeId
-                        }
+                    folders: {
+                        connect: [...foldersIds.map(id => ({id: id}))]
                     }
                 }
             })

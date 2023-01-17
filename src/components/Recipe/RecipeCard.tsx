@@ -10,7 +10,7 @@ const RecipeCard: React.FC<{
 }> = ({ recipe }) => {
     return (
         <div className='group'>
-            <Link href={`recipe/${recipe.id}`}>
+            <Link href={`recipes/${recipe.id}`}>
                 <div className='relative overflow-hidden'>
                     <Image
                         // src={recipe.image}

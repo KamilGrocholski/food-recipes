@@ -16,7 +16,7 @@ const AppSidebar = () => {
     const { data: session } = useSession()
 
     return (
-        <aside className={`px-3 transition-all overflow-x-hidden duration-500 ease flex flex-col pt-16 h-screen shadow-gray-300 shadow-xl z-50`}>
+        <aside className={`relative transition-all overflow-x-hidden duration-500 ease flex flex-col pt-16 h-screen shadow-gray-300 shadow-xl z-50`}>
             <Logo />
             {session?.user?.id ?
                 <button onClick={handleSignOut} className='mx-auto w-fit'>

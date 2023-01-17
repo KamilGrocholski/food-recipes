@@ -19,5 +19,5 @@ export const assureIsFolderOwner = async (
 
     if (!folder) throw new TRPCError({code: 'NOT_FOUND'})
 
-    if (folder.ownerId === ctx.session?.user?.id) throw new TRPCError({code: 'FORBIDDEN'})
+    if (folder.ownerId !== ctx.session?.user?.id) throw new TRPCError({code: 'FORBIDDEN'})
 } 

@@ -227,7 +227,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                                         errorMessage={errors?.tags?.[index]?.name?.message}
                                     />
                                     <Button
-                                        content='Delete'
+                                        content={Icons.trash}
                                         onClick={() => removeTag(index)}
                                         variant='error'
                                     />

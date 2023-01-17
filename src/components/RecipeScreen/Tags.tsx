@@ -31,6 +31,7 @@ const Tag: React.FC<{
 
         return (
             <Button
+                size='sm'
                 content={tag.name}
                 onClick={goToTag}
                 variant='accent'
