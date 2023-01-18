@@ -72,7 +72,9 @@ const RecipeCard = ({
                                 height={40}
                             />
                         </div>
-                        <div>{recipe.views}</div>
+                        <div className='text-center font-semibold text-gray-400'>
+                            {recipe.views}
+                        </div>
                     </div>
                 </div>
             </Link>

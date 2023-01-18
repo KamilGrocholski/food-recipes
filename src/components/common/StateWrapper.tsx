@@ -3,6 +3,7 @@ import Loader from "./Loader"
 interface StateWrapperProps<T> {
     isLoading: boolean
     isError: boolean
+    isEmpty?: boolean
     data: T
     NonEmpty: (data: NonNullable<T>) => JSX.Element
     Empty?: React.ReactNode
@@ -13,20 +14,22 @@ interface StateWrapperProps<T> {
 const StateWrapper = <T,>({
     isLoading,
     isError,
+    isEmpty,
     data,
     NonEmpty,
     Empty,
     Loading,
-    Error
+    Error,
 }: StateWrapperProps<T>) => {
     if (isLoading) return <>{Loading ?? DefaultLoading}</>
 
     if (isError) return <>{Error ?? DefaultError}</>
 
+    if (isEmpty) return <>{Empty ?? DefaultEmpty}</>
+
     if (Array.isArray(data) && data.length <= 0) return <>{Empty ?? DefaultEmpty}</>
 
     if (data === undefined || data === null) return <>{Empty ?? DefaultEmpty}</>
-
     return NonEmpty(data)
 }
 

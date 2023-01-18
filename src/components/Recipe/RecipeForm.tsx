@@ -291,10 +291,9 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                     <Button
                         type='submit'
                         content='Add Recipe'
-                        variant='primary'
                         isLoading={createRecipe.isLoading}
                         loadingText='Adding Recipe...'
-                        disabled={createRecipe.isLoading}
+                        disabled={createRecipe.isLoading || createRecipe.isSuccess}
                     />
                 </section>
 

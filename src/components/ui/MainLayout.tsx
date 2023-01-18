@@ -1,4 +1,5 @@
 import useWindowSize from "../../hooks/useWindowSize"
+import ToastContainer from "../common/Toast"
 import AppContent from "./AppContent/AppContent"
 import AppSidebar from "./AppSidebar/AppSidebar"
 import MobileAppSideBar from "./AppSidebar/MobileAppSideBar"
@@ -16,6 +17,7 @@ const MainLayout: React.FC<{
             // <div className='absolute w-full'>
             <div className='flex flex-row w-full'>
                 {width >= 1024 ? <AppSidebar /> : <MobileAppSideBar />}
+                <ToastContainer />
                 <AppContent useContainer={useContainer}>
                     {children}
                 </AppContent>

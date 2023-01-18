@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import StateWrapper from "../components/common/StateWrapper";
+import RecipeListingLoader from "../components/Recipe/RecipeListingLoader";
 import RecipesListing from "../components/Recipe/RecipesListing";
 import MainLayout from "../components/ui/MainLayout";
 
@@ -25,6 +26,7 @@ const Home: NextPage = () => {
           isLoading={infiniteRecipesQuery.isLoading}
           isError={infiniteRecipesQuery.isError}
           data={infiniteRecipesQuery.data?.pages[0]?.recipes}
+          Loading={<RecipeListingLoader />}
           NonEmpty={data => <RecipesListing recipes={data} />}
         />
       </MainLayout>

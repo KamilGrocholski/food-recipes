@@ -2,9 +2,11 @@ import { Dialog } from "@headlessui/react"
 import { type Folder, type Recipe } from "@prisma/client"
 import Image, { type StaticImageData } from "next/image"
 import { useState } from "react"
+import { useToastControls } from "../../hooks/useToastControls"
 import { api } from "../../utils/api"
 import Button from "../common/Button"
 import Divider from "../common/Divider"
+import Modal from "../common/Modal"
 import StateWrapper from "../common/StateWrapper"
 
 const AddToRecipeToFolderModal: React.FC<{
@@ -20,19 +22,30 @@ const AddToRecipeToFolderModal: React.FC<{
     title,
     recipeId
 }) => {
+        const { show } = useToastControls()
+
         const utils = api.useContext()
 
-        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery({ recipeId })
+        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery()
+
         const addToFoldersMutation = api.folder.addRecipeToFolders.useMutation({
             onSuccess: () => {
                 close()
-                void utils.folder.getAllByCurrentUserId.invalidate({ recipeId })
+                void utils.folder.getAllByCurrentUserId.invalidate()
+                show('recipe-to-folder-success')
+            },
+            onError: () => {
+                show('recipe-to-folder-error')
             }
         })
 
         const [checkedIds, setCheckedIds] = useState<Folder['id'][]>([])
 
         const handleAddToFolders = () => {
+            if (checkedIds.length <= 0) {
+                close()
+                return
+            }
             addToFoldersMutation.mutate({
                 recipeId,
                 foldersIds: checkedIds
@@ -48,69 +61,136 @@ const AddToRecipeToFolderModal: React.FC<{
         }
 
         return (
-            <Dialog open={isOpen} onClose={close} className='relative z-50'>
+            <Modal
+                close={close}
+                isOpen={isOpen}
+                title='Add the recipe to your collections'
+                description='Select collections by clicking on them and press the confirm button'
+            >
+                <div>
+                    <div className='prose'>
+                        <h3>
+                            {title}
+                        </h3>
+                        {/* <div>
+                            <Image
+                                src={}
+                                // src={image}
+                                alt={title}
+                                layout='fixed'
+                                width={50}
+                                height={50}
+                            />
+                        </div> */}
+                    </div>
 
-                <div className="fixed inset-0 flex items-center justify-center bg-black/70 p-4">
-                    <Dialog.Panel className="w-full max-w-sm rounded bg-white p-3 prose">
-                        <Dialog.Title as='h3'>
-                            Add the recipe to your collections
-                        </Dialog.Title>
-                        <Dialog.Description>
-                            Select collections by clicking on them and press the confirm button
-                        </Dialog.Description>
-                        <Divider />
-                        <div>
-                            {/* <div className='prose'>
-                                <h1>
-                                    {title}
-                                </h1>
-                                <div>
-                                    <Image
-                                        src={image}
-                                        alt={title}
-                                        layout='fixed'
-                                        width={50}
-                                        height={50}
-                                    />
+                    <StateWrapper
+                        data={foldersQuery.data}
+                        isLoading={foldersQuery.isLoading}
+                        isError={foldersQuery.isError}
+                        Empty={<div className='my-3 p-3'>You have no collections.</div>}
+                        NonEmpty={(folders) => {
+                            const filteredFolders = folders.filter(folder => folder.recipes.map(recipe => recipe.id).includes(recipeId) === false)
+                            if (filteredFolders.length === 0) return <div className='max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>Looks like the recipe is in every collection.</div>
+
+                            return (
+                                <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
+                                    {filteredFolders.map((folder, index) => (
+                                        <FolderCheckbox
+                                            key={index}
+                                            id={folder.id}
+                                            name={folder.name}
+                                            onChange={handleCheckChange}
+                                        />
+                                    ))}
                                 </div>
-                            </div> */}
-
-                            <StateWrapper
-                                data={foldersQuery.data}
-                                isLoading={foldersQuery.isLoading}
-                                isError={foldersQuery.isError}
-                                Empty={<div className='my-3 p-3'>Looks like the recipe is in every collection.</div>}
-                                NonEmpty={(folders) =>
-                                    <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
-                                        {folders.map((folder, index) => (
-                                            <FolderCheckbox
-                                                key={index}
-                                                id={folder.id}
-                                                name={folder.name}
-                                                onChange={handleCheckChange}
-                                            />
-                                        ))}
-                                    </div>
-                                }
-                            />
-                        </div>
-
-                        <div className='flex flex-row space-x-3 justify-end w-full'>
-                            <Button
-                                content={'Confirm'}
-                                onClick={handleAddToFolders}
-                                size='sm'
-                            />
-                            <Button
-                                content={'Cancel'}
-                                onClick={close}
-                                size='sm'
-                                variant='error'
-                            />
-                        </div>
-                    </Dialog.Panel>
+                            )
+                        }}
+                    />
                 </div>
-            </Dialog>
+
+                <div className='flex flex-row space-x-3 justify-end w-full'>
+                    <Button
+                        content={'Confirm'}
+                        onClick={handleAddToFolders}
+                        size='sm'
+                    />
+                    <Button
+                        content={'Cancel'}
+                        onClick={close}
+                        size='sm'
+                        variant='error'
+                    />
+                </div>
+            </Modal>
+            // <Dialog open={isOpen} onClose={close} className='relative z-50'>
+
+            //     <div className="fixed inset-0 flex items-center justify-center bg-black/70 p-4">
+            //         <Dialog.Panel className="w-full max-w-sm rounded bg-white p-3 prose">
+            //             <Dialog.Title as='h3'>
+            //                 Add the recipe to your collections
+            //             </Dialog.Title>
+            //             <Dialog.Description>
+            //                 Select collections by clicking on them and press the confirm button
+            //             </Dialog.Description>
+            //             <Divider />
+            //             <div>
+            //                 {/* <div className='prose'>
+            //                     <h1>
+            //                         {title}
+            //                     </h1>
+            //                     <div>
+            //                         <Image
+            //                             src={image}
+            //                             alt={title}
+            //                             layout='fixed'
+            //                             width={50}
+            //                             height={50}
+            //                         />
+            //                     </div>
+            //                 </div> */}
+
+            //                 <StateWrapper
+            //                     data={foldersQuery.data}
+            //                     isLoading={foldersQuery.isLoading}
+            //                     isError={foldersQuery.isError}
+            //                     Empty={<div className='my-3 p-3'>You have no collections.</div>}
+            //                     NonEmpty={(folders) => {
+            //                         const filteredFolders = folders.filter(folder => folder.recipes.map(recipe => recipe.id).includes(recipeId) === false)
+            //                         if (filteredFolders.length === 0) return <div className='max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>Looks like the recipe is in every collection.</div>
+
+            //                         return (
+            //                             <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
+            //                                 {filteredFolders.map((folder, index) => (
+            //                                     <FolderCheckbox
+            //                                         key={index}
+            //                                         id={folder.id}
+            //                                         name={folder.name}
+            //                                         onChange={handleCheckChange}
+            //                                     />
+            //                                 ))}
+            //                             </div>
+            //                         )
+            //                     }}
+            //                 />
+            //             </div>
+
+            //             <div className='flex flex-row space-x-3 justify-end w-full'>
+            //                 <Button
+            //                     content={'Confirm'}
+            //                     onClick={handleAddToFolders}
+            //                     size='sm'
+            //                 />
+            //                 <Button
+            //                     content={'Cancel'}
+            //                     onClick={close}
+            //                     size='sm'
+            //                     variant='error'
+            //                 />
+            //             </div>
+            //         </Dialog.Panel>
+            //     </div>
+            // </Dialog>
         )
     }
 

@@ -70,22 +70,24 @@ export const folderRouter = createTRPCRouter({
         }),
     
     getAllByCurrentUserId: protectedProcedure
-        .input(z.object({
-            recipeId: infoBase.id.optional()
-        }))
-        .query(({ctx, input}) => {
+        .query(({ctx, }) => {
             return ctx.prisma.folder.findMany({
                 where: {
                     ownerId: ctx.session.user.id,
-                    recipes: input.recipeId ? {
-                        none: {
-                            id: input.recipeId
-                        }
-                    } : undefined
+                    // recipes: input.recipeId ? {
+                    //     none: {
+                    //         id: input.recipeId
+                    //     }
+                    // } : undefined
                 },
                 select: {
                     id: true,
-                    name: true
+                    name: true,
+                    recipes: {
+                        select: {
+                            id: true
+                        }
+                    }
                 }
             })
         }),

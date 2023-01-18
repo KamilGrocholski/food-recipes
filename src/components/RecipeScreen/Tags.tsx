@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { type RecipePublicQueryOutput } from "../../server/api/routers/recipe"
 import Button from "../common/Button"
 
@@ -6,13 +7,17 @@ const Tags: React.FC<{
 }> = ({
     tags
 }) => {
+
         return (
             <section className='prose'>
                 <h2>Tags</h2>
                 <div className='flex flex-row flex-wrap gap-3'>
-                    {tags.map((tag, index) => (
-                        <Tag key={index} tag={tag} />
-                    ))}
+                    {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                        tags?.map((tag, index) => (
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                            <Tag key={index} tag={tag?.tag?.name ?? ''} />
+                        ))}
                 </div>
             </section>
         )
@@ -21,18 +26,20 @@ const Tags: React.FC<{
 export default Tags
 
 const Tag: React.FC<{
-    tag: RecipePublicQueryOutput['tags'][number]
+    tag: string
 }> = ({
     tag
 }) => {
+        const router = useRouter()
+
         const goToTag = () => {
-            console.log(tag.name)
+            void router.push(`/recipes&${tag}`)
         }
 
         return (
             <Button
                 size='sm'
-                content={tag.name}
+                content={tag}
                 onClick={goToTag}
                 variant='accent'
                 outline={true}

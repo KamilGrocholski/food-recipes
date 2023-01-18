@@ -9,6 +9,7 @@ import NumbersInfo from './NumbersInfo'
 import RatingReadOnly, { getAvgRecipeRating } from './Rating'
 import placeholder from '../../assets/placeholder.jpg'
 import { Icons } from '../../assets/icons'
+import Logo from '../ui/AppSidebar/Logo'
 
 const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -24,10 +25,15 @@ const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
                 recipeId={recipe.id}
             />
             <section className='flex flex-col lg:flex-row w-full justify-between'>
-                <article className='flex flex-col space-y-4 prose'>
+                <article className='flex flex-col space-y-3 prose'>
                     <h1>{recipe.title}</h1>
-                    <span className='text-lg font-semibold'>{recipe.views}</span>
-                    <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={true} />
+                    <div className='flex flex-row items-center divide-x'>
+                        <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={true} />
+                        <div className='flex flex-row items-center space-x-2 font-semibold text-lg pl-3 ml-3'>
+                            <span>{Icons.eye}</span>
+                            <span>{recipe.views}</span>
+                        </div>
+                    </div>
                     <NumbersInfo {...recipe} />
                     <Button
                         content={<div className='flex flex-row space-x-1 items-center'><span>{Icons.plus}</span> <span>Add to Collection</span></div>}

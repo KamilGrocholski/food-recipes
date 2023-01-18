@@ -8,7 +8,7 @@ import FoldersListing from "./FoldersListing"
 const FoldersMenu = () => {
     const utils = api.useContext()
 
-    const foldersQuery = api.folder.getAllByCurrentUserId.useQuery({})
+    const foldersQuery = api.folder.getAllByCurrentUserId.useQuery()
     const folderCreateMutation = api.folder.create.useMutation({
         onSuccess: () => {
             setNewName('')
@@ -21,7 +21,6 @@ const FoldersMenu = () => {
             name: newName
         })
     }
-
 
     const [newName, setNewName] = useState<string>('')
     const [isCreating, setIsCreating] = useState<boolean>(false)

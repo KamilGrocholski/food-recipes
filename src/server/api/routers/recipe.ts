@@ -52,17 +52,17 @@ export const recipeRouter = createTRPCRouter({
           }
         })
 
-        return ctx.prisma.recipe.findUnique({
+        return await ctx.prisma.recipe.findUnique({
           where: {
             id: input.id
           },
-          select: selects.publicRecipe
+          select: selects.publicRecipe,
         })
       }),
 
       create: protectedProcedure
         .input(recipeSchema)
-        .mutation(({ ctx, input }) => {
+        .mutation(async ({ ctx, input }) => {
           const {
             title,
             description,
@@ -88,9 +88,17 @@ export const recipeRouter = createTRPCRouter({
               instructions: {
                 create: instructions
               },
-              tags: {
-                create: tags
-              }
+              // tags: tags ? {
+              //   create: [
+              //     ...tags.map(tag => ({
+              //       tag: {
+              //         create: {
+              //           name: tag.name
+              //         }
+              //       }
+              //     }))
+              //   ]
+              // } : undefined
             }
           })
         }),
@@ -161,8 +169,11 @@ export const selects = {
             },
             tags: {
               select: {
-                id: true,
-                name: true
+                tag: {
+                  select: {
+                    name: true
+                  }
+                }
               }
             },
             _count: {

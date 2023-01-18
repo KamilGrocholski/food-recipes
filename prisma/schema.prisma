@@ -77,9 +77,17 @@ model Ingredient {
 }
 
 model Tag {
-    id     Int      @id @default(autoincrement())
-    name   String   @unique
-    recipe Recipe[]
+    id         Int          @id @default(autoincrement())
+    name       String       @unique
+    recipeTags RecipeTags[]
+}
+
+model RecipeTags {
+    id       Int     @id @default(autoincrement())
+    recipe   Recipe? @relation(fields: [recipeId], references: [id])
+    recipeId Int
+    tag      Tag?    @relation(fields: [tagId], references: [id])
+    tagId    Int
 }
 
 model Instruction {
@@ -107,7 +115,7 @@ model Recipe {
     reviews      Review[]
     ingredients  Ingredient[]
     instructions Instruction[]
-    tags         Tag[]
+    tags         RecipeTags[]
     folders      Folder[]
 
     createdAt      DateTime @default(now())
