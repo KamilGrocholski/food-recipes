@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import type { Recipe_GetOneById_Output } from '../../types/trpcTypeInfer'
 import Details from './Details'
 import Overview from './Overview'

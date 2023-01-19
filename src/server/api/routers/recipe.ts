@@ -1,5 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
+import { uploadImage } from "../../cloudinary";
 import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
@@ -71,14 +73,24 @@ export const recipeRouter = createTRPCRouter({
             prepTimeInMin,
             ingredients,
             instructions,
-            tags
+            tags,
           } = input 
 
-          return ctx.prisma.recipe.create({
+          let uploadResult
+            try {  
+               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+               uploadResult = await uploadImage(image) 
+            } catch (err) {
+              console.log(err)
+              throw new TRPCError({code: 'INTERNAL_SERVER_ERROR'})
+            }
+
+          return await ctx.prisma.recipe.create({
             data: {
               title,
               description,
-              image,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+              image: uploadResult.url,
               cookTimeInMin,
               prepTimeInMin,
               authorId: ctx.session.user.id,

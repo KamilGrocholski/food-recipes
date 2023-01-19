@@ -44,7 +44,7 @@ const FoldersMenu = () => {
                         value={newName ?? ''}
                         onChange={e => setNewName(e.target.value)}
                         inputSize='xs'
-                        variant='accent'
+                        variant='primary'
                         className='w-fit'
                         onKeyDown={handleOnKeyDown}
                         onBlur={() => setIsCreating(false)}

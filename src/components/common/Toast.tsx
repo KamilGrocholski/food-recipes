@@ -23,7 +23,7 @@ const toasts: { toasts: ToastProps[] } = {
             variant: 'error'
         },
         {
-            message: 'Recipe added succesfully!',
+            message: 'Recipe added successfully!',
             uniqueId: 'recipe-creation-success',
             variant: 'success'
         },

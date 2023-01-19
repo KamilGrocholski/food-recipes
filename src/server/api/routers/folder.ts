@@ -1,4 +1,4 @@
-import { type inferRouterOutputs } from "@trpc/server";
+import { TRPCError, type inferRouterOutputs } from "@trpc/server";
 import { z } from "zod";
 import { addRecipeToFoldersSchema, createFolderSchema, getOneFolderSchema, removeFolderSchema, updateFolderSchema } from "../../schema/folder.schema";
 import { infoBase } from "../../schema/recipe.schema";
@@ -55,7 +55,18 @@ export const folderRouter = createTRPCRouter({
         .mutation(async ({ctx, input}) => {
             const { recipeId, foldersIds } = input
 
-            // await assureIsFolderOwner(ctx, folderId)
+            const foldersOwnerIds = await ctx.prisma.recipe.findMany({
+                where: {
+                    id: {
+                        in: foldersIds
+                    }
+                },
+                select: {
+                    authorId: true                    
+                }
+            })
+
+            if (foldersOwnerIds.some((id) => id.authorId !== ctx.session.user.id)) throw new TRPCError({code: 'UNAUTHORIZED'})
 
             return await ctx.prisma.recipe.update({
                 where: {

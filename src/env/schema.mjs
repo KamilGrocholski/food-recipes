@@ -22,7 +22,9 @@ export const serverSchema = z.object({
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
   EMAIL_SERVER: z.string(),
-  EMAIL_FROM: z.string()
+  EMAIL_FROM: z.string(),
+  CLOUDINARY_SECRET_KEY: z.string(),
+  CLOUDINARY_FOLDER_NAME: z.string()
 });
 
 /**
@@ -31,5 +33,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_PUBLIC_KEY: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
 });

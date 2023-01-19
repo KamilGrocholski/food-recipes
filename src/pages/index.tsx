@@ -1,17 +1,22 @@
 import { type NextPage } from "next";
-import { signIn } from "next-auth/react";
 import Head from "next/head";
+import Image from "next/image";
 import StateWrapper from "../components/common/StateWrapper";
 import RecipeListingLoader from "../components/Recipe/RecipeListingLoader";
 import RecipesListing from "../components/Recipe/RecipesListing";
 import MainLayout from "../components/ui/MainLayout";
+import heroImage1 from '../assets/hero-images/1.jpg'
+import { useRouter } from "next/router";
 
 import { api } from "../utils/api";
+import Button from "../components/common/Button";
 
 const Home: NextPage = () => {
   const infiniteRecipesQuery = api.recipe.infiniteRecipes.useInfiniteQuery({}, {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
+
+  const router = useRouter()
 
   return (
     <>
@@ -22,6 +27,24 @@ const Home: NextPage = () => {
       </Head>
 
       <MainLayout useContainer={true}>
+        <div className="hero min-h-[50vh] bg-base-200 mb-16">
+          <div className="hero-content flex-col lg:flex-row-reverse">
+            <Image
+              src={heroImage1}
+              alt='herpo,mage'
+              width={400}
+              height={300}
+            />
+            <div>
+              <h1 className="text-5xl font-bold">Finally, some good meal!</h1>
+              <p className="py-6">Create, gather, and share ideas.</p>
+              <Button
+                content='Get started'
+                onClick={() => void router.push('/recipes/new')}
+              />
+            </div>
+          </div>
+        </div>
         <StateWrapper
           isLoading={infiniteRecipesQuery.isLoading}
           isError={infiniteRecipesQuery.isError}

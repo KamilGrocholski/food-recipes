@@ -80,7 +80,7 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
                     <span>
                         This collection has no recipes,
                         <Link href='/'>
-                            <span className='link-accent'> add </span>
+                            <span className='link-primary'> add </span>
                         </Link>
                         some.
                     </span>

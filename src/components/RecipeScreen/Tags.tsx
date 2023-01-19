@@ -41,7 +41,6 @@ const Tag: React.FC<{
                 size='sm'
                 content={tag}
                 onClick={goToTag}
-                variant='accent'
                 outline={true}
             />
         )

@@ -11,7 +11,7 @@ export type RecipeSchema = z.infer<typeof recipeSchema>
 
 export const reviewBase = {
     id: z.number(),
-    comment: z.string().min(1).max(255),
+    comment: z.string().max(255, {message: 'Max. 255 characters'}),
     rating: z.number().min(0).max(5)
 } 
 
@@ -73,7 +73,7 @@ export const infoBase = {
         .max(55, {message: 'Max. 55 characters'}),
     description: z.string().trim()
         .max(255, {message: 'Max. 255 character'}),
-    image: z.string().url(),
+    image: z.string(),
     cookTimeInMin: z.number()
         .min(0, {message: 'Min. 1 minute'})
         .max(9999, {message: '9999 is the maximum'}),

@@ -48,7 +48,7 @@ export const StarRating: React.FC<StartRatingProps> = ({
                     onMouseEnter={() => !readOnly && setHover(index + 1)}
                     onMouseLeave={() => !readOnly && setHover(value)}
                 >
-                    <div className={`text-3xl ${index + 1 <= (hover || value) ? 'text-yellow-500' : 'text-gray-500'}`}>
+                    <div className={`text-3xl ${index + 1 <= (hover || value) ? 'text-secondary' : 'text-gray-500'}`}>
                         &#9733;
                     </div>
                 </button>

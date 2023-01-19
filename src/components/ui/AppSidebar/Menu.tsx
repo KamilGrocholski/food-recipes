@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Divider from "../../common/Divider"
+import SessionStateWrapper from "../../common/SessionStateWrapper"
 import FoldersMenu from "../../Folder/FoldersMenu"
 import config from "./config"
 
@@ -17,7 +18,10 @@ const Menu = () => {
                 ))}
             </div>
             <Divider />
-            <FoldersMenu />
+            <SessionStateWrapper
+                LoggedIn={() => <FoldersMenu />}
+                NotLoggedIn={() => <span className='text-sm items-center text-primary pl-3'>Sign in to add a collection</span>}
+            />
         </section>
     )
 }

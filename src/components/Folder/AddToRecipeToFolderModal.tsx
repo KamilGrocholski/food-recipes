@@ -1,12 +1,13 @@
-import { Dialog } from "@headlessui/react"
 import { type Folder, type Recipe } from "@prisma/client"
+import { useSession } from "next-auth/react"
 import Image, { type StaticImageData } from "next/image"
 import { useState } from "react"
 import { useToastControls } from "../../hooks/useToastControls"
 import { api } from "../../utils/api"
 import Button from "../common/Button"
-import Divider from "../common/Divider"
+import MessageWithSignInButton from "../common/MessageWithSignInButton"
 import Modal from "../common/Modal"
+import SessionStateWrapper from "../common/SessionStateWrapper"
 import StateWrapper from "../common/StateWrapper"
 
 const AddToRecipeToFolderModal: React.FC<{
@@ -22,11 +23,16 @@ const AddToRecipeToFolderModal: React.FC<{
     title,
     recipeId
 }) => {
+
         const { show } = useToastControls()
 
         const utils = api.useContext()
 
-        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery()
+        const { data: session } = useSession()
+
+        const foldersQuery = api.folder.getAllByCurrentUserId.useQuery(undefined, {
+            enabled: !!session?.user
+        })
 
         const addToFoldersMutation = api.folder.addRecipeToFolders.useMutation({
             onSuccess: () => {
@@ -67,12 +73,16 @@ const AddToRecipeToFolderModal: React.FC<{
                 title='Add the recipe to your collections'
                 description='Select collections by clicking on them and press the confirm button'
             >
-                <div>
-                    <div className='prose'>
-                        <h3>
-                            {title}
-                        </h3>
-                        {/* <div>
+                <SessionStateWrapper
+                    NotLoggedIn={(signIn) => <MessageWithSignInButton signIn={signIn} message={'to add a recipe to your collection'} />}
+                    LoggedIn={() =>
+                        <>
+                            <div>
+                                <div className='prose'>
+                                    <h3>
+                                        {title}
+                                    </h3>
+                                    {/* <div>
                             <Image
                                 src={}
                                 // src={image}
@@ -82,46 +92,49 @@ const AddToRecipeToFolderModal: React.FC<{
                                 height={50}
                             />
                         </div> */}
-                    </div>
-
-                    <StateWrapper
-                        data={foldersQuery.data}
-                        isLoading={foldersQuery.isLoading}
-                        isError={foldersQuery.isError}
-                        Empty={<div className='my-3 p-3'>You have no collections.</div>}
-                        NonEmpty={(folders) => {
-                            const filteredFolders = folders.filter(folder => folder.recipes.map(recipe => recipe.id).includes(recipeId) === false)
-                            if (filteredFolders.length === 0) return <div className='max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>Looks like the recipe is in every collection.</div>
-
-                            return (
-                                <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
-                                    {filteredFolders.map((folder, index) => (
-                                        <FolderCheckbox
-                                            key={index}
-                                            id={folder.id}
-                                            name={folder.name}
-                                            onChange={handleCheckChange}
-                                        />
-                                    ))}
                                 </div>
-                            )
-                        }}
-                    />
-                </div>
 
-                <div className='flex flex-row space-x-3 justify-end w-full'>
-                    <Button
-                        content={'Confirm'}
-                        onClick={handleAddToFolders}
-                        size='sm'
-                    />
-                    <Button
-                        content={'Cancel'}
-                        onClick={close}
-                        size='sm'
-                        variant='error'
-                    />
-                </div>
+                                <StateWrapper
+                                    data={foldersQuery.data}
+                                    isLoading={foldersQuery.isLoading}
+                                    isError={foldersQuery.isError}
+                                    Empty={<div className='my-3 p-3'>You have no collections.</div>}
+                                    NonEmpty={(folders) => {
+                                        const filteredFolders = folders.filter(folder => folder.recipes.map(recipe => recipe.id).includes(recipeId) === false)
+                                        if (filteredFolders.length === 0) return <div className='max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>Looks like the recipe is in every collection.</div>
+
+                                        return (
+                                            <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
+                                                {filteredFolders.map((folder, index) => (
+                                                    <FolderCheckbox
+                                                        key={index}
+                                                        id={folder.id}
+                                                        name={folder.name}
+                                                        onChange={handleCheckChange}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )
+                                    }}
+                                />
+                            </div>
+
+                            <div className='flex flex-row space-x-3 justify-end w-full'>
+                                <Button
+                                    content={'Confirm'}
+                                    onClick={handleAddToFolders}
+                                    size='sm'
+                                />
+                                <Button
+                                    content={'Cancel'}
+                                    onClick={close}
+                                    size='sm'
+                                    variant='error'
+                                />
+                            </div>
+                        </>
+                    }
+                />
             </Modal>
             // <Dialog open={isOpen} onClose={close} className='relative z-50'>
 
@@ -216,7 +229,7 @@ const FolderCheckbox: React.FC<{
             <div className='flex flex-row space-x-3'>
                 <input
                     type='checkbox'
-                    className='checkbox checkbox-accent'
+                    className='checkbox checkbox-primary'
                     checked={checked}
                     onChange={handleChange}
                 />

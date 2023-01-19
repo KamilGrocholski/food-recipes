@@ -8,6 +8,9 @@ import Divider from '../common/Divider'
 import { api } from '../../utils/api'
 import { useRouter } from 'next/router'
 import { Icons } from '../../assets/icons'
+import React, { useEffect, useState } from 'react'
+import ImageUploader from '../common/ImageUploader'
+import { useToastControls } from '../../hooks/useToastControls'
 
 export interface RecipeFormProps {
     onValid: SubmitHandler<RecipeSchema>
@@ -18,13 +21,17 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
     onValid,
     onError
 }) => {
+    const { show } = useToastControls()
+
+    const [recipeImage, setRecipeImage] = useState<string | undefined>(undefined)
 
     // Main useForm hook
     const {
         control,
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue
     } = useForm<RecipeSchema>({
         resolver: zodResolver(recipeSchema),
         mode: 'onChange',
@@ -34,6 +41,12 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
             prepTimeInMin: 0
         }
     })
+
+    useEffect(() => {
+        if (recipeImage) {
+            setValue('image', recipeImage)
+        }
+    }, [recipeImage, setValue])
 
     // Ingredients hook
     const {
@@ -68,8 +81,11 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
     const router = useRouter()
 
     const createRecipe = api.recipe.create.useMutation({
-        onError: (error) => console.log(error),
+        onError: () => {
+            show('recipe-creation-error')
+        },
         onSuccess: (data) => {
+            show('recipe-creation-success')
             void router.push(`/recipes/${data.id}`)
         }
     })
@@ -107,13 +123,6 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                             {...register('title')}
                             errorMessage={errors.title?.message}
                         />
-                        <Input
-                            type='text'
-                            label='Image'
-                            placeholder='Image'
-                            {...register('image')}
-                            errorMessage={errors.image?.message}
-                        />
                         <TextArea
                             label='Description'
                             placeholder='Description'
@@ -122,10 +131,16 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         />
                     </div>
                     <div>
+                        <ImageUploader storeImageFn={url => setRecipeImage(url)} image={recipeImage} />
+                        {/* <input {...register('image')} className='hidden' />
                         <Input
                             type='file'
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                            onChange={onChangeImage}
                             className='file-input'
-                        />
+                            accept='image/*'
+                            errorMessage={errors.image?.message}
+                        /> */}
                     </div>
                 </section>
 
@@ -283,7 +298,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         <Input
                             label='Make it public'
                             type='checkbox'
-                            className='checkbox h-8 w-8 checkbox-accent'
+                            className='checkbox h-8 w-8 checkbox-primary'
                             defaultChecked={false}
                             {...register('isPublished')}
                         />

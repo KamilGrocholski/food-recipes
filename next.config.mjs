@@ -15,7 +15,8 @@ const config = {
   },
   images: {
     domains: [
-      'cdn.discordapp.com'
+      'cdn.discordapp.com',
+      'res.cloudinary.com',
     ]
   }
 };
