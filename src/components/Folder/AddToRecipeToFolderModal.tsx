@@ -79,7 +79,7 @@ const AddToRecipeToFolderModal: React.FC<{
                         <>
                             <div>
                                 <div className='prose'>
-                                    <h4>
+                                    <h4 className='break-all'>
                                         {title}
                                     </h4>
                                     {/* <div>

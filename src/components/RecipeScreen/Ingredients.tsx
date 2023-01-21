@@ -10,8 +10,8 @@ const Ingredients: React.FC<{
                 <h2>Ingredients</h2>
                 <ul className='flex flex-col'>
                     {ingredients.map((ingredient, i) => (
-                        <p key={i} className='flex flex-row items-center space-x-1'>
-                            <span>{ingredient.description}</span>
+                        <p key={i} className='flex flex-row items-start space-x-1'>
+                            <span className='break-all'>{ingredient.description}</span>
                         </p>
                     ))}
                 </ul>

@@ -14,7 +14,7 @@ const AppSidebar = () => {
     }
 
     return (
-        <aside className={`relative transition-all overflow-x-hidden duration-500 ease flex flex-col pt-16 h-screen shadow-gray-300 shadow-xl z-50`}>
+        <aside className={`relative transition-all w-64 overflow-x-hidden duration-500 ease flex flex-col pt-16 h-screen shadow-gray-300 shadow-xl z-50`}>
             <Logo />
             <Divider />
             <SessionStateWrapper

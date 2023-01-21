@@ -3,7 +3,6 @@ import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
 import { deleteImage, uploadImage } from "../../cloudinary";
 import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
-import { assureIsRecipeOwner } from "../middlewares/assureIsRecipeOwner";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -11,6 +10,40 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 export type RecipePublicQueryOutput = NonNullable<RouterOutputs['recipe']['getOneById']>
 
 export const recipeRouter = createTRPCRouter({
+  getTitles: publicProcedure
+  .input(z.object({
+    query: z.string()
+  }))
+  .query(({ctx, input}) => {
+    return ctx.prisma.recipe.findMany({
+      take: 10,
+      where: {
+        title: {
+          startsWith: input.query
+        }
+      },
+      select: {
+        id: true,
+        title: true
+      }
+    })
+  }),
+
+  getByUserId: publicProcedure
+    .input(z.object({
+      userId: z.string(),
+      take: z.number().optional()
+    }))
+    .query(({ctx, input}) => {
+      return ctx.prisma.recipe.findMany({
+        take: input.take,
+        where: {
+          authorId: input.userId
+        },
+        select: selects.publicRecipe
+      })
+    }),
+
   infiniteRecipes: publicProcedure
     .input(z.object({limit: z.number().min(1).max(25).optional(), cursor: z.number().optional()}))
     .query(async ({ ctx, input }) => {

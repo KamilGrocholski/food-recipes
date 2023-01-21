@@ -6,6 +6,7 @@ import FolderScreen from "../../components/Folder/FolderScreen";
 import StateWrapper from "../../components/common/StateWrapper";
 import { type NextPage } from "next/types";
 import FolderScreenLoader from "../../components/Folder/FolderScreenLoader";
+import Button from "../../components/common/Button";
 
 const Folder: NextPage = () => {
     const router = useRouter()
@@ -15,21 +16,39 @@ const Folder: NextPage = () => {
     })
 
     return (
-        <>
-            <Head>
-                <title>{folderQuery.data?.name}</title>
-            </Head>
-
-            <MainLayout useContainer={true}>
-                <StateWrapper
-                    isLoading={folderQuery.isLoading}
-                    isError={folderQuery.isError}
-                    data={folderQuery.data}
-                    Loading={<FolderScreenLoader />}
-                    NonEmpty={folder => <FolderScreen {...folder} />}
-                />
-            </MainLayout>
-        </>
+        <MainLayout useContainer={true}>
+            <StateWrapper
+                isLoading={folderQuery.isLoading}
+                isError={folderQuery.isError}
+                data={folderQuery.data}
+                Loading={<FolderScreenLoader />}
+                Error={
+                    <>
+                        <Head>
+                            <title>Sorry, we could not get the collection.</title>
+                        </Head>
+                        <div className='prose mx-auto'>
+                            <h3>Sorry, someting went wrong and we did not get Your collection.</h3>
+                            <Button
+                                content='Try again'
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                                onClick={() => folderQuery.refetch()}
+                                variant='primary'
+                                size='lg'
+                            />
+                        </div>
+                    </>
+                }
+                NonEmpty={folder =>
+                    <>
+                        <Head>
+                            <title>{folder.name}</title>
+                        </Head>
+                        <FolderScreen {...folder} />
+                    </>
+                }
+            />
+        </MainLayout>
     );
 };
 

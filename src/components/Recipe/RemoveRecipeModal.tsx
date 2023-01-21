@@ -48,7 +48,7 @@ const RemoveRecipeModal: React.FC<Props> = ({
         >
             <div className='my-3'>
                 <div className='prose'>
-                    <h4>
+                    <h4 className='break-all'>
                         {title}
                     </h4>
                     <div className=''>

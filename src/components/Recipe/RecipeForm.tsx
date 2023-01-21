@@ -208,7 +208,7 @@ const RecipeForm: React.FC = () => {
                             e.preventDefault()
                             appendInstruction({
                                 description: '',
-                                number: instructions.length === 0 ? 1 : instructions.length + 2
+                                number: instructions.length + 1
                             }, {
                                 shouldFocus: true
                             })

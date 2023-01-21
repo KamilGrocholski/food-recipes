@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useState } from 'react'
 import type { Recipe_GetOneById_Output } from "../../types/trpcTypeInfer"
@@ -8,13 +7,12 @@ import AddToRecipeToFolderModal from '../Folder/AddToRecipeToFolderModal'
 import NumbersInfo from './NumbersInfo'
 import RatingReadOnly, { getAvgRecipeRating } from './Rating'
 import { Icons } from '../../assets/icons'
-import Logo from '../ui/AppSidebar/Logo'
 
 const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     return (
-        <div className='mx-auto max-w-[768px] w-full'>
+        <div className='mx-auto max-w-[800px] w-full'>
             <AddToRecipeToFolderModal
                 isOpen={isModalOpen}
                 close={() => setIsModalOpen(false)}
@@ -22,9 +20,9 @@ const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
                 image={recipe.image}
                 recipeId={recipe.id}
             />
-            <section className='flex flex-col lg:flex-row w-full justify-between'>
-                <article className='flex flex-col space-y-3 prose'>
-                    <h1>{recipe.title}</h1>
+            <section className='flex flex-col-reverse lg:flex-row lg:space-x-24 w-full justify-center lg:items-end items-center lg:justify-between'>
+                <article className='flex flex-col space-y-3 prose min-w-fit'>
+                    <h1 className='mt-5 lg:mt-0 max-w-[300px] break-all'>{recipe.title}</h1>
                     <div className='flex flex-row items-center divide-x'>
                         <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={true} />
                         <div className='flex flex-row items-center space-x-2 font-semibold text-lg pl-3 ml-3'>
@@ -39,13 +37,13 @@ const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
                     />
                 </article>
 
-                <div>
+                <div className="w-full min-h-[350px] relative">
                     <Image
                         src={recipe.image}
-                        alt='/dd'
-                        layout='fixed'
-                        height={300}
-                        width={300}
+                        alt="profile"
+                        objectFit="cover"
+                        fill
+                        className="w-full h-full top-0 left-0 object-cover rounded-md"
                     />
                 </div>
             </section>

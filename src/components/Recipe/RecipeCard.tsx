@@ -41,7 +41,7 @@ const RecipeCard = ({
                 title={recipe.title}
             />
             <Link href={`/recipes/${recipe.id}`}>
-                <figure className='relative overflow-hidden min-h-[320px]'>
+                <figure className='rounded-md relative overflow-hidden min-h-[320px]'>
                     {options?.withRemoveModal ?
                         <Button
                             content={Icons.trash}
@@ -78,15 +78,15 @@ const RecipeCard = ({
                         }}
                     />
                     <div className='font-semibold p-3 justify-end flex flex-col absolute bottom-0 space-y-2 bg-gradient-to-t from-black w-full text-white transition-all duration-300 ease-in-out origin-bottom group-hover:translate-y-0 translate-y-full '>
-                        <span>Cook time {recipe.cookTimeInMin}</span>
-                        <span>Prep time {recipe.prepTimeInMin}</span>
+                        <span className='break-words'>Cooking time {recipe.cookTimeInMin} minutes</span>
+                        <span className='break-words'>Preparation time {recipe.prepTimeInMin} minutes</span>
                     </div>
                 </figure>
                 <div className='py-3 flex flex-row justify-between bg-base-100'>
                     <div className='flex flex-col space-y-2'>
                         <div className='flex flex-col'>
-                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary truncate overflow-hidden max-w-[120px]'>{recipe.title}</span>
-                            <span className='text-sm text-gray-500 overflow-hidden truncate max-w-[120px]'>{recipe.description}</span>
+                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary truncate lg:max-w-[200px] max-w-[120px]'>{recipe.title}</span>
+                            <span className='text-sm text-gray-500 truncate max-w-[120px]'>{recipe.description}</span>
                         </div>
                         <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={false} />
                     </div>

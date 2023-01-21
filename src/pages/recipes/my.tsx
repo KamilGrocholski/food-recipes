@@ -19,7 +19,7 @@ const MyRecipesPage: NextPage = () => {
             </Head>
             <MainLayout useContainer={true}>
                 <div className='prose flex flex-row mx-3 mb-3'>
-                    <h1>Your recipes</h1>
+                    <h1>My recipes</h1>
                     <div></div>
                 </div>
                 <SessionStateWrapper

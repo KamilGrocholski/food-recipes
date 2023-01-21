@@ -8,9 +8,9 @@ const Instructions: React.FC<{
             <h2>Instructions</h2>
             <ul className='flex flex-col'>
                 {instructions.map((instruction, i) => (
-                    <div key={i} className='flex flex-row items-center space-x-1'>
+                    <div key={i} className='flex flex-row items-start space-x-1'>
                         <div><span>{i + 1}.</span></div>
-                        <div><span>{instruction.description}</span></div>
+                        <div><span className='break-all'>{instruction.description}</span></div>
                     </div>
                 ))}
             </ul>

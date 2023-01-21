@@ -24,7 +24,7 @@ const FoldersListing: React.FC<{
                         onClick={() => handleOpenFolder(folder.id)}
                         className='group hover:cursor-pointer'
                     >
-                        <div className='space-x-2 flex flex-row items-center text-xs text-gray-400'>
+                        <div className='space-x-2 flex flex-row items-center text-lg lg:text-xs text-gray-400'>
                             <div className='group-hover:text-secondary transition-all duration-200 ease'>{Icons.folder}</div>
                             <div className='break-normal ...'>{folder.name}</div>
                         </div>

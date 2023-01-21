@@ -44,7 +44,11 @@ const RecipesInfiniteScroll = ({
                 </div> : null}
 
             <div ref={endContainerRef} className='items-center flex justify-center w-full mx-auto bg-primary/30 min-h-12 mt-4'>
-                {hasMore ? null : End ?? <span className='font-semibold '>No more recipes</span>}
+                {hasMore
+                    ? null
+                    : isFetching
+                        ? null
+                        : End ?? <span className='font-semibold '>No more recipes</span>}
             </div>
 
         </div>

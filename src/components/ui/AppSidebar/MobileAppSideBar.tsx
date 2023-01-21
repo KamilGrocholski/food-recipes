@@ -5,10 +5,12 @@ import useUi from '../../../store/ui.store'
 import Avatar from '../../common/Avatar'
 import Button from '../../common/Button'
 import Divider from '../../common/Divider'
+import { Dialog } from '@headlessui/react'
 import SessionStateWrapper from '../../common/SessionStateWrapper'
 import InfoBottom from './InfoBottom'
 import Logo from './Logo'
 import Menu from './Menu'
+import BackgroundFillerModal from '../../common/BackgroundFillerModal'
 
 const MobileAppSideBar = () => {
     const isSideNavOpen = useUi(state => state.isSideNavOpen)
@@ -23,7 +25,8 @@ const MobileAppSideBar = () => {
 
 
     return (
-        <aside ref={ref} className={`fixed top-0 bottom-0 bg-white z-50 transition-all overflow-x-hidden duration-500 pt-16 ease flex flex-col h-screen shadow-gray-300 shadow-xl ${isSideNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <aside ref={ref} className={`fixed w-64 top-0 bottom-0 bg-white z-50 transition-all no-scrollbar overflow-x-hidden duration-500 pt-16 ease flex flex-col h-screen shadow-gray-300 shadow-xl ${isSideNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <BackgroundFillerModal isOpen={isSideNavOpen} close={() => setIsSideNavOpen(false)} />
             <Logo />
             <Divider />
             <SessionStateWrapper
