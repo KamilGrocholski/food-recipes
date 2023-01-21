@@ -55,7 +55,7 @@ export const instructionSchema = z.object({
 export const ingredientBase = {
     id: z.number(),
     description: z.string().trim()
-        // .min(1)
+        .min(1, {message: 'Min. 1 character'})
         .max(55, {message: 'Max. 55 characters'})
 }     
 
@@ -79,8 +79,7 @@ export const infoBase = {
         .max(9999, {message: '9999 is the maximum'}),
     prepTimeInMin: z.number()
         .min(0, {message: 'Min. 1 minute'})
-        .max(9999, {message: '9999 is the maximum'}),
-    isPublished: z.boolean()
+        .max(9999, {message: '9999 is the maximum'})
 }
 
 export const infoSchema = z.object({
@@ -88,8 +87,7 @@ export const infoSchema = z.object({
     description: infoBase.description,
     image: infoBase.image,
     cookTimeInMin: infoBase.cookTimeInMin,
-    prepTimeInMin: infoBase.prepTimeInMin,
-    isPublished: infoBase.isPublished
+    prepTimeInMin: infoBase.prepTimeInMin
 })
 
 
@@ -97,11 +95,11 @@ export const infoSchema = z.object({
 
 export const recipeSchema = infoSchema
     .extend({
-        ingredients: z.array(ingredientSchema).optional()
+        ingredients: z.array(ingredientSchema)
     })
     .extend({
-        tags: z.array(tagSchema).optional()
+        tags: z.array(tagSchema)
     })
     .extend({
-        instructions: z.array(instructionSchema).optional()
+        instructions: z.array(instructionSchema)
     })

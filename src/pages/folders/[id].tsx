@@ -17,7 +17,7 @@ const Folder: NextPage = () => {
     return (
         <>
             <Head>
-
+                <title>{folderQuery.data?.name}</title>
             </Head>
 
             <MainLayout useContainer={true}>

@@ -12,15 +12,7 @@ import React, { useEffect, useState } from 'react'
 import ImageUploader from '../common/ImageUploader'
 import { useToastControls } from '../../hooks/useToastControls'
 
-export interface RecipeFormProps {
-    onValid: SubmitHandler<RecipeSchema>
-    onError?: SubmitErrorHandler<RecipeSchema> | undefined
-}
-
-const RecipeForm: React.FC<RecipeFormProps> = ({
-    onValid,
-    onError
-}) => {
+const RecipeForm: React.FC = () => {
     const { show } = useToastControls()
 
     const [recipeImage, setRecipeImage] = useState<string | undefined>(undefined)
@@ -38,12 +30,19 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
         shouldFocusError: true,
         defaultValues: {
             cookTimeInMin: 0,
-            prepTimeInMin: 0
+            prepTimeInMin: 0,
+            ingredients: [
+                { description: '' }
+            ],
+            instructions: [
+                { description: '' }
+            ]
         }
     })
 
+    // On change `recipeImage` set `setValue` for image to main useForm
     useEffect(() => {
-        if (recipeImage) {
+        if (recipeImage && recipeImage.trim() !== '') {
             setValue('image', recipeImage)
         }
     }, [recipeImage, setValue])
@@ -109,7 +108,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
             >
                 <section className='prose'>
                     <h2>Add a recipe</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia quam accusantium harum. Quos, ea omnis aspernatur numquam doloremque blanditiis! Itaque minus iure maxime totam est optio dolor quis rerum id.</p>
+                    <p>Uploading recipes is easy! Select ingredients, write instructions and add.</p>
                 </section>
 
                 <Divider />
@@ -131,16 +130,9 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                         />
                     </div>
                     <div>
+                        {/* <p className='label label-error'>{errors.image?.message}</p> */}
+                        <Input {...register('image')} errorMessage={errors.image?.message} className='hidden' />
                         <ImageUploader storeImageFn={url => setRecipeImage(url)} image={recipeImage} />
-                        {/* <input {...register('image')} className='hidden' />
-                        <Input
-                            type='file'
-                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                            onChange={onChangeImage}
-                            className='file-input'
-                            accept='image/*'
-                            errorMessage={errors.image?.message}
-                        /> */}
                     </div>
                 </section>
 
@@ -274,6 +266,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                             type='number'
                             label='Cooking time'
                             placeholder='Cooking time'
+                            min={0}
                             {...register('cookTimeInMin', {
                                 valueAsNumber: true,
                             })}
@@ -283,6 +276,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                             type='number'
                             label='Preparation time'
                             placeholder='Preparation time'
+                            min={0}
                             {...register('prepTimeInMin', {
                                 valueAsNumber: true,
                             })}
@@ -294,15 +288,6 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                 <Divider />
 
                 <section className='flex flex-col space-y-3'>
-                    <div>
-                        <Input
-                            label='Make it public'
-                            type='checkbox'
-                            className='checkbox h-8 w-8 checkbox-primary'
-                            defaultChecked={false}
-                            {...register('isPublished')}
-                        />
-                    </div>
                     <Button
                         type='submit'
                         content='Add Recipe'

@@ -5,17 +5,17 @@ const MessageWithSignInButton: React.FC<{
     message: string
 }> = ({
     signIn,
-    message
+    message,
 }) => {
         return (
             <span className='m-3'>
                 <Button
                     content='Sign in'
-                    size='xs'
+                    size='sm'
                     onClick={signIn}
                     className='mr-1'
                 />
-                {message}
+                <span className='text-lg'>{message}</span>
             </span>
         )
     }

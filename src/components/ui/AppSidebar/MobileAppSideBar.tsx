@@ -1,4 +1,4 @@
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import React, { useRef } from 'react'
 import useOnClickOutside from '../../../hooks/useOnClickOutside'
 import useUi from '../../../store/ui.store'

@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
-import { uploadImage } from "../../cloudinary";
+import { deleteImage, uploadImage } from "../../cloudinary";
 import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
+import { assureIsRecipeOwner } from "../middlewares/assureIsRecipeOwner";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -38,6 +39,16 @@ export const recipeRouter = createTRPCRouter({
       }
     }),
 
+    getCurrentUserRecipes: protectedProcedure
+      .query(({ctx}) => {
+        return ctx.prisma.recipe.findMany({
+          where: {
+            authorId: ctx.session.user.id
+          },
+          select: selects.publicRecipe
+        })
+      }),
+
     getOneById: publicProcedure
       .input(z.object({
         id: z.number()
@@ -56,11 +67,40 @@ export const recipeRouter = createTRPCRouter({
 
         return await ctx.prisma.recipe.findUnique({
           where: {
-            id: input.id
+            id: input.id,
           },
           select: selects.publicRecipe,
         })
       }),
+
+      delete: protectedProcedure
+        .input(infoBase.id)
+        .mutation(async ({ctx, input: recipeId}) => {
+          return ctx.prisma.$transaction(async () => {
+            const recipe = await ctx.prisma.recipe.findUnique({
+              where: {
+                id: recipeId
+              },
+              select: {
+                image: true,
+                authorId: true
+              }
+            })
+
+            if (!recipe) throw new TRPCError({code: 'NOT_FOUND'})
+            if (recipe.authorId !== ctx.session.user.id) throw new TRPCError({code: 'UNAUTHORIZED'})
+
+            const deletion = await ctx.prisma.recipe.delete({
+              where: {
+                id: recipeId
+              }
+            })
+
+            await deleteImage(recipe.image)
+
+            return deletion
+          })
+        }),
 
       create: protectedProcedure
         .input(recipeSchema)
@@ -81,8 +121,7 @@ export const recipeRouter = createTRPCRouter({
                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                uploadResult = await uploadImage(image) 
             } catch (err) {
-              console.log(err)
-              throw new TRPCError({code: 'INTERNAL_SERVER_ERROR'})
+              throw new TRPCError({code: 'INTERNAL_SERVER_ERROR', message: 'cloudinary image upload error'})
             }
 
           return await ctx.prisma.recipe.create({
@@ -100,17 +139,12 @@ export const recipeRouter = createTRPCRouter({
               instructions: {
                 create: instructions
               },
-              // tags: tags ? {
-              //   create: [
-              //     ...tags.map(tag => ({
-              //       tag: {
-              //         create: {
-              //           name: tag.name
-              //         }
-              //       }
-              //     }))
-              //   ]
-              // } : undefined
+              tags: {
+                connectOrCreate: tags.map(tag => ({
+                  where: {name: tag.name},
+                  create: {name: tag.name}
+                }))
+              }
             }
           })
         }),
@@ -134,7 +168,7 @@ export const recipeRouter = createTRPCRouter({
               }
             })
           })
-});
+})
 
 export const selects = {
   publicRecipe: {
@@ -181,11 +215,7 @@ export const selects = {
             },
             tags: {
               select: {
-                tag: {
-                  select: {
-                    name: true
-                  }
-                }
+                name: true
               }
             },
             _count: {

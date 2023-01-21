@@ -14,9 +14,9 @@ const Tags: React.FC<{
                 <div className='flex flex-row flex-wrap gap-3'>
                     {
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                        tags?.map((tag, index) => (
+                        tags.map((tag, index) => (
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                            <Tag key={index} tag={tag?.tag?.name ?? ''} />
+                            <Tag key={index} tag={tag.name ?? ''} />
                         ))}
                 </div>
             </section>

@@ -1,13 +1,13 @@
 import RecipeCardLoader from "./RecipeCardLoader"
 
-const RecipeListingLoader = () => {
+const RecipeListingLoader: React.FC<{ items?: number }> = ({
+    items = 16
+}) => {
     return (
-        <section className='w-full mx-auto'>
-            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 mx-3'>
-                {[...Array.from({ length: 15 })].map((_, index) => (
-                    <RecipeCardLoader key={index} />
-                ))}
-            </div>
+        <section className='recipes-listing'>
+            {[...Array.from({ length: items })].map((_, index) => (
+                <RecipeCardLoader key={index} />
+            ))}
         </section>
     )
 }

@@ -8,27 +8,53 @@ import AddToRecipeToFolderModal from "../Folder/AddToRecipeToFolderModal"
 import { useState } from "react"
 import { Icons } from "../../assets/icons"
 import logo from '../../assets/logo.png'
+import RemoveRecipeModal from "./RemoveRecipeModal"
 
 interface RecipeCardProps<T = RecipePublicQueryOutput> {
-    recipe: T,
+    recipe: T
+    options?: {
+        withRemoveModal: boolean
+    }
 }
 
 const RecipeCard = ({
     recipe,
+    options
 }: RecipeCardProps): JSX.Element => {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isAddRecipeModalOpen, setIsAddRecipeModalOpen] = useState(false)
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
 
     return (
         <div className='group z-0'>
             <AddToRecipeToFolderModal
-                isOpen={isModalOpen}
-                close={() => setIsModalOpen(false)}
+                isOpen={isAddRecipeModalOpen}
+                close={() => setIsAddRecipeModalOpen(false)}
+                recipeId={recipe.id}
+                image={recipe.image}
+                title={recipe.title}
+            />
+            <RemoveRecipeModal
+                isOpen={isRemoveModalOpen}
+                close={() => setIsRemoveModalOpen(false)}
                 recipeId={recipe.id}
                 image={recipe.image}
                 title={recipe.title}
             />
             <Link href={`/recipes/${recipe.id}`}>
-                <figure className='relative overflow-hidden w-[220xp] h-[220px] rounded-md'>
+                <figure className='relative overflow-hidden min-h-[320px]'>
+                    {options?.withRemoveModal ?
+                        <Button
+                            content={Icons.trash}
+                            shape='circle'
+                            variant='ghost'
+                            size='sm'
+                            onClick={(e) => {
+                                e.nativeEvent.preventDefault()
+                                e.stopPropagation()
+                                setIsRemoveModalOpen(true)
+                            }}
+                            className='absolute top-1 left-1 z-50 text-error btn-active'
+                        /> : null}
                     <Button
                         content={Icons.plus}
                         shape='circle'
@@ -37,7 +63,7 @@ const RecipeCard = ({
                         onClick={(e) => {
                             e.nativeEvent.preventDefault()
                             e.stopPropagation()
-                            setIsModalOpen(true)
+                            setIsAddRecipeModalOpen(true)
                         }}
                         className='absolute top-1 right-1 z-50'
                     />
@@ -46,6 +72,10 @@ const RecipeCard = ({
                         // src={placeholder}
                         alt='recipe image'
                         fill
+                        style={{
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                        }}
                     />
                     <div className='font-semibold p-3 justify-end flex flex-col absolute bottom-0 space-y-2 bg-gradient-to-t from-black w-full text-white transition-all duration-300 ease-in-out origin-bottom group-hover:translate-y-0 translate-y-full '>
                         <span>Cook time {recipe.cookTimeInMin}</span>
@@ -55,7 +85,7 @@ const RecipeCard = ({
                 <div className='py-3 flex flex-row justify-between bg-base-100'>
                     <div className='flex flex-col space-y-2'>
                         <div className='flex flex-col'>
-                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary'>{recipe.title}</span>
+                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary truncate overflow-hidden max-w-[120px]'>{recipe.title}</span>
                             <span className='text-sm text-gray-500 overflow-hidden truncate max-w-[120px]'>{recipe.description}</span>
                         </div>
                         <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={false} />

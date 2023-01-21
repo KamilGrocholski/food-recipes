@@ -1,27 +1,55 @@
-import type { GetStaticPaths, GetStaticPropsContext, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import MainLayout from "../../components/ui/MainLayout";
 import RecipeScreen from "../../components/RecipeScreen/RecipeScreen";
 import { api } from "../../utils/api";
+import StateWrapper from "../../components/common/StateWrapper";
+import Button from '../../components/common/Button'
 
 const Recipe: NextPage = () => {
     const router = useRouter()
     const id = router.query.id as unknown as string
     const recipeQuery = api.recipe.getOneById.useQuery({ id: parseInt(id) })
 
-    if (!recipeQuery.data) return null
-
     return (
-        <>
-            <Head>
+        <MainLayout useContainer={true}>
+            <StateWrapper
+                data={recipeQuery.data}
+                isLoading={recipeQuery.isLoading}
+                isError={recipeQuery.isError}
+                Error={
+                    <>
+                        <Head>
+                            <title>Sorry, we could not get the recipe.</title>
+                        </Head>
+                        <div className='prose mx-auto'>
+                            <h3>Sorry, someting went wrong and we did not get Your recipe.</h3>
+                            <Button
+                                content='Try again'
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                                onClick={() => recipeQuery.refetch()}
+                                variant='primary'
+                                size='lg'
+                            />
+                        </div>
+                    </>
+                }
+                NonEmpty={(recipe) =>
+                    <>
+                        <Head>
+                            <title>{recipe.title}</title>
+                            <meta name='author id' content={recipe.author.id} />
+                            <meta name='author name' content={recipe.author.name ?? '-NO_NAME-'} />
+                            <meta name='recipe id' content={recipe.id.toString()} />
+                            <meta name='recipe title' content={recipe.title} />
+                        </Head>
 
-            </Head>
-
-            <MainLayout useContainer={true}>
-                <RecipeScreen {...recipeQuery.data} />
-            </MainLayout>
-        </>
+                        <RecipeScreen {...recipe} />
+                    </>
+                }
+            />
+        </MainLayout >
     );
 };
 

@@ -38,27 +38,27 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
 
     return (
         <div>
-            <div className='prose mb-24 flex flex-row space-x-3'>
-                <Modal
-                    title='Do you want to delete the collection?'
-                    isOpen={isModalOpen}
-                    close={() => setIsModalOpen(false)}
-                >
-                    <div className='flex justify-end space-x-3'>
-                        <Button
-                            content='Confirm'
-                            onClick={handleRemoveFolder}
-                            variant='error'
-                            disabled={removeFolderMutation.isLoading || removeFolderMutation.isSuccess}
-                        />
-                        <Button
-                            content='Cancel'
-                            onClick={() => setIsModalOpen(false)}
-                            variant='ghost'
-                            disabled={removeFolderMutation.isLoading}
-                        />
-                    </div>
-                </Modal>
+            <Modal
+                title='Do you want to delete the collection?'
+                isOpen={isModalOpen}
+                close={() => setIsModalOpen(false)}
+            >
+                <div className='flex justify-end space-x-3'>
+                    <Button
+                        content='Confirm'
+                        onClick={handleRemoveFolder}
+                        variant='error'
+                        disabled={removeFolderMutation.isLoading || removeFolderMutation.isSuccess}
+                    />
+                    <Button
+                        content='Cancel'
+                        onClick={() => setIsModalOpen(false)}
+                        variant='ghost'
+                        disabled={removeFolderMutation.isLoading}
+                    />
+                </div>
+            </Modal>
+            <div className='prose flex flex-row mx-3 mb-3'>
                 {/* <Image
                     src={folderHeaderImage}
                     alt='image'
@@ -67,10 +67,13 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
                     height={300}
                     className='blur-sm'
                 /> */}
-                <h1>{folder.name}</h1>
+                <h1 className='mr-3'>{folder.name}</h1>
                 <Button
                     content={Icons.trash}
                     variant='error'
+                    size='sm'
+                    className='btn-active'
+                    shape='circle'
                     onClick={() => setIsModalOpen(true)}
                 />
             </div>

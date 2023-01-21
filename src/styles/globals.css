@@ -14,4 +14,8 @@
     .loading-template {
         @apply bg-gray-300 animate-pulse duration-1000 delay-200
     }
+
+    .recipes-listing {
+        @apply grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mx-3
+    }
 }

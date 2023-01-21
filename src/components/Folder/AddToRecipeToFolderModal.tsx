@@ -79,9 +79,9 @@ const AddToRecipeToFolderModal: React.FC<{
                         <>
                             <div>
                                 <div className='prose'>
-                                    <h3>
+                                    <h4>
                                         {title}
-                                    </h3>
+                                    </h4>
                                     {/* <div>
                             <Image
                                 src={}
@@ -124,12 +124,14 @@ const AddToRecipeToFolderModal: React.FC<{
                                     content={'Confirm'}
                                     onClick={handleAddToFolders}
                                     size='sm'
+                                    isLoading={addToFoldersMutation.isLoading}
+                                    disabled={addToFoldersMutation.isLoading}
                                 />
                                 <Button
                                     content={'Cancel'}
                                     onClick={close}
                                     size='sm'
-                                    variant='error'
+                                    variant='ghost'
                                 />
                             </div>
                         </>

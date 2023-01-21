@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes } from "react"
+import { type ButtonHTMLAttributes, forwardRef } from "react"
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'accent' | 'ghost'
@@ -11,7 +11,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string
 }
 
-const Button: React.FC<ButtonProps> = ({
+// eslint-disable-next-line react/display-name
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
     variant = 'primary',
     isLoading,
     loadingText,
@@ -21,17 +22,18 @@ const Button: React.FC<ButtonProps> = ({
     shape = 'none',
     className,
     ...rest
-}) => {
+}, ref) => {
     return (
         <button
             className={`btn ${shapeConfig[shape]} ${sizeConfig[size]} ${variantConfig[variant]} ${outline ? 'btn-outline' : ''} ${isLoading ? 'loading' : ''} ${className ? className : ''}`}
             type='button'
+            ref={ref}
             {...rest}
         >
             {isLoading && loadingText ? loadingText : content}
         </button>
     )
-}
+})
 
 export default Button
 

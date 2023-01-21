@@ -18,9 +18,10 @@ const toasts: { toasts: ToastProps[] } = {
             variant: 'success'
         },
         {
-            message: 'An error has occured during the deletion of a collection',
+            message: 'An error has occured during the deletion of the collection.',
             uniqueId: 'folder-deletion-error',
-            variant: 'error'
+            variant: 'error',
+            duration: 5000
         },
         {
             message: 'Recipe added successfully!',
@@ -28,19 +29,32 @@ const toasts: { toasts: ToastProps[] } = {
             variant: 'success'
         },
         {
-            message: 'An error has occured during the creation of a recipe',
+            message: 'An error has occured during the creation of the recipe.',
             uniqueId: 'recipe-creation-error',
-            variant: 'error'
+            variant: 'error',
+            duration: 5000
         },
         {
-            message: 'Recipe added to the collections',
+            message: 'Recipe added to the collections!',
             uniqueId: 'recipe-to-folder-success',
             variant: 'success'
         },
         {
-            message: "Couldn't add the recipe to your collection",
+            message: "Couldn't add the recipe to your collection.",
             uniqueId: 'recipe-to-folder-error',
             variant: 'error',
+            duration: 5000
+        },
+        {
+            message: 'Recipe deleted successfully!',
+            uniqueId: 'recipe-remove-success',
+            variant: 'success'
+        },
+        {
+            message: "Couldn't delete the recipe.",
+            uniqueId: 'recipe-remove-error',
+            variant: 'error',
+            duration: 5000
         }
     ]
 }
@@ -51,7 +65,9 @@ export const toastsUniqueIds = [
     'recipe-creation-success',
     'recipe-creation-error',
     'recipe-to-folder-success',
-    'recipe-to-folder-error'
+    'recipe-to-folder-error',
+    'recipe-remove-success',
+    'recipe-remove-error'
 ] as const
 
 const ToastContainer = () => {
