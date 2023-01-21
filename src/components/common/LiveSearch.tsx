@@ -8,11 +8,12 @@ interface SuggestionItem<T> {
 }
 
 interface LiveSearchProps<T> {
-    onSearch: (searchValue: T) => void
+    onSearchExact: (searchValue: T) => void
+    onSearchLike?: (query: string) => void
     fetchSuggestions: (query: string) => Promise<T[]>
     extractQuery: (value: T) => string
     renderSuggestion: (item: SuggestionItem<T>) => JSX.Element
-    containerClassNames: string
+    containerClassNames?: string
 }
 
 // Allowes to move within the suggestion`s list with [up] and [down] arrows in a circular way
@@ -36,7 +37,8 @@ const circularArrayTraversy = (array: unknown[], currentIndex: number, direction
 }
 
 function LiveSearch<T>({
-    onSearch,
+    onSearchExact,
+    onSearchLike,
     fetchSuggestions,
     extractQuery,
     renderSuggestion,
@@ -59,15 +61,16 @@ function LiveSearch<T>({
     }, [fetchSuggestions, debouncedQuery])
 
     // Reset selected index on `query` change
-    useEffect(() => {
-        setSelectedIndex(-1)
-    }, [query])
+    // useEffect(() => {
+    //     setSelectedIndex(-1)
+    // }, [query])
 
     // Set query by getting value from `suggestions[selectedIndex]`
     const handleSetQueryFromSuggestions = () => {
         const selectedSuggestion = suggestions[selectedIndex]
         if (!selectedSuggestion) return
         setQuery(extractQuery(selectedSuggestion))
+        setSelectedIndex(-1)
     }
 
     // Set `query` on change from the input
@@ -83,7 +86,7 @@ function LiveSearch<T>({
             case 'Enter':
                 e.preventDefault()
                 handleSetQueryFromSuggestions()
-                suggestions[selectedIndex] && onSearch(suggestions[selectedIndex] as T)
+                suggestions[selectedIndex] ? onSearchExact(suggestions[selectedIndex] as T) : onSearchLike && onSearchLike(query)
                 setShowSuggestions(false)
                 break
             case 'ArrowDown':
@@ -105,43 +108,50 @@ function LiveSearch<T>({
 
     // Hide suggestions, when the input loses focus
     const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.preventDefault()
         setShowSuggestions(false)
     }
 
     // Set `selectedIndex` and set `query` from `suggestions[selectedIndex]`, by clicking on an item from suggesion`s list 
     const handleOnClickSelect = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault()
         setSelectedIndex(index)
         handleSetQueryFromSuggestions()
     }
 
     // Show suggestions, when the input is focused
     const handleOnFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.preventDefault()
         setShowSuggestions(true)
     }
 
     return (
-        <div className="form-control">
+        <div className="form-control flex flex-col">
             <div className="input-group relative">
                 <input
                     type="text"
-                    placeholder="Search…"
-                    className="input input-bordered"
+                    placeholder="Search tags…"
+                    className="input input-bordered w-full"
                     onFocus={handleOnFocus}
                     onKeyDown={handleOnKeyDown}
                     onBlur={handleOnBlur}
                     onChange={handleOnChange}
                     value={query}
+                    tabIndex={1}
                 />
                 <button className="btn btn-square">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 </button>
 
-                {showSuggestions ?
-                    suggestions.map((suggestion, index) => (
+            </div>
+
+            {showSuggestions ?
+                <div className={containerClassNames ?? 'flex flex-col space-y-1 h-fit absolute top-full bg-base-100 my-3 p-1'}>
+                    {suggestions.map((suggestion, index) => (
                         <div
                             key={index}
                             onClick={(e) => handleOnClickSelect(e, index)}
-                            className={containerClassNames}
+                            tabIndex={-1}
                         >
                             {renderSuggestion({
                                 suggestion,
@@ -149,9 +159,9 @@ function LiveSearch<T>({
                                 isSelected: index === selectedIndex
                             })}
                         </div>
-                    ))
-                    : null}
-            </div>
+                    ))}
+                </div>
+                : null}
         </div>
     )
 }

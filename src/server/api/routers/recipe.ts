@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
 import { deleteImage, uploadImage } from "../../cloudinary";
-import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
+import { infoBase, recipeSchema, reviewSchema, tagBase } from "../../schema/recipe.schema";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -10,21 +10,20 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 export type RecipePublicQueryOutput = NonNullable<RouterOutputs['recipe']['getOneById']>
 
 export const recipeRouter = createTRPCRouter({
-  getTitles: publicProcedure
+  getTags: publicProcedure
   .input(z.object({
     query: z.string()
   }))
   .query(({ctx, input}) => {
-    return ctx.prisma.recipe.findMany({
-      take: 10,
+    return ctx.prisma.tag.findMany({
+      take: 15,
       where: {
-        title: {
+        name: {
           startsWith: input.query
         }
       },
       select: {
-        id: true,
-        title: true
+        name: true
       }
     })
   }),
@@ -45,14 +44,29 @@ export const recipeRouter = createTRPCRouter({
     }),
 
   infiniteRecipes: publicProcedure
-    .input(z.object({limit: z.number().min(1).max(25).optional(), cursor: z.number().optional()}))
+    .input(z.object({
+      limit: z.number().min(1).max(25).optional(), 
+      cursor: z.number().optional(),
+      filter: z.object({
+        tag: z.string()
+      }).partial().optional()
+    }))
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 25
-      const { cursor } = input
+      const { cursor, filter } = input
 
       const recipes = await ctx.prisma.recipe.findMany({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
+        where: filter && {
+          tags: {
+            some: {
+              name: {
+                contains: filter.tag,
+              }
+            }
+          }
+        },
         orderBy: {
           id: 'desc'
         },

@@ -33,7 +33,7 @@ const Tag: React.FC<{
         const router = useRouter()
 
         const goToTag = () => {
-            void router.push(`/recipes&${tag}`)
+            void router.push(`/recipes/tags/${tag}`)
         }
 
         return (

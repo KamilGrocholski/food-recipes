@@ -11,7 +11,7 @@ const MessageWithSignInButton: React.FC<{
             <span className='m-3'>
                 <Button
                     content='Sign in'
-                    size='sm'
+                    size='xs'
                     onClick={signIn}
                     className='mr-1'
                 />

@@ -132,7 +132,7 @@ const RecipeForm: React.FC = () => {
                     <div>
                         {/* <p className='label label-error'>{errors.image?.message}</p> */}
                         <Input {...register('image')} errorMessage={errors.image?.message} className='hidden' />
-                        <ImageUploader storeImageFn={url => setRecipeImage(url)} image={recipeImage} />
+                        <ImageUploader storeImageFn={setRecipeImage} image={recipeImage} maxSize={1 * 1024 * 1024} />
                     </div>
                 </section>
 

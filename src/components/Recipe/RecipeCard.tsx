@@ -85,8 +85,8 @@ const RecipeCard = ({
                 <div className='py-3 flex flex-row justify-between bg-base-100'>
                     <div className='flex flex-col space-y-2'>
                         <div className='flex flex-col'>
-                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary truncate lg:max-w-[200px] max-w-[120px]'>{recipe.title}</span>
-                            <span className='text-sm text-gray-500 truncate max-w-[120px]'>{recipe.description}</span>
+                            <span className='card-title transition-all duration-300 ease-in-out group-hover:text-primary truncate lg:max-w-[200px] max-w-[120px] capitalize'>{recipe.title}</span>
+                            <span className='text-sm text-gray-500 truncate lg:max-w-[200px] max-w-[120px]'>by <span className='font-semibold'>{recipe.author.name}</span></span>
                         </div>
                         <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={false} />
                     </div>

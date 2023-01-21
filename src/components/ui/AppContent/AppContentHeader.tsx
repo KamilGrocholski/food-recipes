@@ -4,6 +4,7 @@ import useUi from "../../../store/ui.store"
 const AppContentHeader = () => {
 
   const setIsSideNavOpen = useUi(state => state.setIsSideNavOpen)
+  const setIsSearchModalOpen = useUi(state => state.setIsSearchModalOpen)
 
   return (
     <header className='w-full sticky top-0 h-fit z-40 mb-12'>
@@ -18,7 +19,7 @@ const AppContentHeader = () => {
           </Link>
         </div>
         <div className="navbar-end">
-          <button className="btn btn-ghost btn-circle">
+          <button className="btn btn-ghost btn-circle" onClick={() => setIsSearchModalOpen(true)}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           </button>
         </div>
