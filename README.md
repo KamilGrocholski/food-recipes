@@ -72,7 +72,7 @@ npm run dev
   ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/recipe_3.png?raw=true)
 
 - Recipe creator\
-  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/recipe_creator_1?raw=true)
+  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/recipe_creator_1.png?raw=true)
   ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/recipe_creator_2.png?raw=true)
 
 - Search modal\
@@ -85,5 +85,5 @@ npm run dev
   ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/user_profile.png?raw=true)
 
 - Collection of recipes\
-  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/add?recipe?to?collections?modal.png?raw=true)
-  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/collection_non_empty.png?raw=true)
+  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/add_recipe_to_collections_modal.png?raw=true)
+  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/collection_not_empty.png?raw=true)
