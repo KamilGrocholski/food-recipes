@@ -61,7 +61,7 @@ npm run dev
 ## Screenshots
 
 - Home\
-  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/home.jpg?raw=true)
+  ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/home.png?raw=true)
 
 - Recipes\
   ![screenshot](https://github.com/KamilGrocholski/food-recipes/blob/main/images/home_recipes.png?raw=true)

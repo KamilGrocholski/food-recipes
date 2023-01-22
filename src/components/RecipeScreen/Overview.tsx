@@ -22,7 +22,7 @@ const Overview: React.FC<Recipe_GetOneById_Output> = (recipe) => {
             />
             <section className='flex flex-col-reverse lg:flex-row lg:space-x-24 w-full justify-center lg:items-end items-center lg:justify-between'>
                 <article className='flex flex-col space-y-3 prose min-w-fit'>
-                    <h1 className='mt-5 lg:mt-0 max-w-[300px] break-all'>{recipe.title}</h1>
+                    <h1 className='mt-5 lg:mt-0 max-w-[300px] break-words'>{recipe.title}</h1>
                     <div className='flex flex-row items-center divide-x'>
                         <RatingReadOnly rating={getAvgRecipeRating(recipe._count, recipe.reviews)} showValue={true} />
                         <div className='flex flex-row items-center space-x-2 font-semibold text-lg pl-3 ml-3'>
