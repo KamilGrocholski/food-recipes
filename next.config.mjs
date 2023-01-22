@@ -17,6 +17,7 @@ const config = {
     domains: [
       'cdn.discordapp.com',
       'res.cloudinary.com',
+      'lh3.googleusercontent.com'
     ]
   }
 };

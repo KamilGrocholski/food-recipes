@@ -18,14 +18,14 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({
     ...rest
 }, ref) => {
     return (
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full">
             {labelPosition === 'top' ? <label className="label">
                 <span className="label-text">{label}</span>
                 <span className='label-text text-red-500'>{errorMessage}</span>
             </label> : null}
             <textarea
                 ref={ref}
-                className={`textarea ${sizeConfig[inputSize]} ${border ? 'textarea-bordered' : ''} w-full max-w-xs ${errorMessage ? indicativeStateConfig['error'] : ''}`}
+                className={`textarea ${sizeConfig[inputSize]} ${border ? 'textarea-bordered' : ''} w-full ${errorMessage ? indicativeStateConfig['error'] : ''}`}
                 {...rest}
             />
             {labelPosition === 'bottom' ? <label className="label">

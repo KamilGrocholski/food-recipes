@@ -11,7 +11,7 @@ const SessionStateWrapper: React.FC<SessionStateWrapperProps> = ({
 }) => {
     const session = useSession()
 
-    const handleSignIn = () => signIn('discord')
+    const handleSignIn = () => signIn('google', { callbackUrl: 'http://localhost:3000' })
 
     if (session.data) return LoggedIn(session)
 

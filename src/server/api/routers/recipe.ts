@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { type RouterOutputs } from "../../../utils/api";
 import { deleteImage, uploadImage } from "../../cloudinary";
-import { infoBase, recipeSchema, reviewSchema, tagBase } from "../../schema/recipe.schema";
+import { infoBase, recipeSchema, reviewSchema } from "../../schema/recipe.schema";
 import { assureRecipeIsNotOwner } from "../middlewares/assureRecipeIsNotOwner";
 import { assureReviewIsNotAdded } from "../middlewares/assureReviewIsNotAdded";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -36,6 +36,19 @@ export const recipeRouter = createTRPCRouter({
     .query(({ctx, input}) => {
       return ctx.prisma.recipe.findMany({
         take: input.take,
+        where: {
+          authorId: input.userId
+        },
+        select: selects.publicRecipe
+      })
+    }),
+
+  getAllByUserId: publicProcedure
+    .input(z.object({
+      userId: z.string()
+    }))
+    .query(({ctx, input}) => {
+      return ctx.prisma.recipe.findMany({
         where: {
           authorId: input.userId
         },

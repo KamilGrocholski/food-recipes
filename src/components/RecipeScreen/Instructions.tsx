@@ -6,14 +6,13 @@ const Instructions: React.FC<{
     return (
         <section className='prose'>
             <h2>Instructions</h2>
-            <ul className='flex flex-col'>
+            <ol className='list-decimal'>
                 {instructions.map((instruction, i) => (
-                    <div key={i} className='flex flex-row items-start space-x-1'>
-                        <div><span>{i + 1}.</span></div>
-                        <div><span className='break-all'>{instruction.description}</span></div>
-                    </div>
+                    <li key={i}>
+                        {instruction.description}
+                    </li>
                 ))}
-            </ul>
+            </ol>
         </section>
     )
 }

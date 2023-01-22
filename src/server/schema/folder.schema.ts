@@ -8,7 +8,7 @@ export type AddRecipeToFolderSchema = z.infer<typeof addRecipeToFoldersSchema>
 
 export const folderBase = {
     id: z.number(),
-    name: z.string().min(1).max(25)
+    name: z.string().min(1, {message: 'Min. 1 character'}).max(35, {message: 'Max. 35 characters'})
 }
 
 export const createFolderSchema = z.object({
@@ -31,4 +31,9 @@ export const addRecipeToFoldersSchema = z.object({
 
 export const getOneFolderSchema = z.object({
     id: folderBase.id
+})
+
+export const removeRecipeFromFolderSchema = z.object({
+    folderId: folderBase.id,
+    recipeId: infoBase.id
 })

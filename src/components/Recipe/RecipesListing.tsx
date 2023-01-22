@@ -5,6 +5,7 @@ const RecipesListing: React.FC<{
     recipes: RecipePublicQueryOutput[],
     options?: {
         withRemoveModal: boolean
+        withRemoveFromFolderModal: boolean
     }
 }> = ({ recipes, options }) => {
     return (

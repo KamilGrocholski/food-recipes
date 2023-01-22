@@ -1,10 +1,15 @@
-import { TRPCError, type inferRouterOutputs } from "@trpc/server";
-import { z } from "zod";
-import { addRecipeToFoldersSchema, createFolderSchema, getOneFolderSchema, removeFolderSchema, updateFolderSchema } from "../../schema/folder.schema";
-import { infoBase } from "../../schema/recipe.schema";
-import { assureIsFolderOwner } from "../middlewares/assureIsFolderOwner";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { selects as recipeSelects } from "./recipe";
+import { TRPCError, type inferRouterOutputs } from "@trpc/server"
+import { 
+    addRecipeToFoldersSchema, 
+    createFolderSchema, 
+    getOneFolderSchema, 
+    removeFolderSchema, 
+    removeRecipeFromFolderSchema, 
+    updateFolderSchema 
+} from "../../schema/folder.schema"
+import { assureIsFolderOwner } from "../middlewares/assureIsFolderOwner"
+import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { selects as recipeSelects } from "./recipe"
 
 export type FolderRouter = inferRouterOutputs<typeof folderRouter>
 
@@ -117,6 +122,25 @@ export const folderRouter = createTRPCRouter({
                     name: true,
                     recipes: {
                         select: recipeSelects.publicRecipe
+                    }
+                }
+            })
+        }),
+    
+    removeFromFolder: protectedProcedure
+        .input(removeRecipeFromFolderSchema)
+        .mutation(async ({ctx, input}) => {
+            const { recipeId, folderId } = input
+
+            await assureIsFolderOwner(ctx, folderId)
+
+            return await ctx.prisma.folder.update({
+                where: {
+                    id: folderId
+                },
+                data: {
+                    recipes: {
+                        disconnect: [{id: recipeId}]
                     }
                 }
             })

@@ -65,7 +65,27 @@ const toasts: { toasts: ToastProps[] } = {
             message: "Couldn't create a collection.",
             uniqueId: 'folder-creation-error',
             variant: 'error'
-        }
+        },
+        {
+            message: "A recipe removed from the collection successfully!",
+            uniqueId: 'recipe-remove-from-folder-success',
+            variant: 'success'
+        },
+        {
+            message: "Couldn't remove a recipe from the collection.",
+            uniqueId: 'recipe-remove-from-folder-error',
+            variant: 'error'
+        },
+        {
+            message: "The collection has been updated successfully!",
+            uniqueId: 'folder-update-success',
+            variant: 'success'
+        },
+        {
+            message: "Couldn't update the collection.",
+            uniqueId: 'folder-update-error',
+            variant: 'error'
+        },
     ]
 }
 
@@ -74,12 +94,16 @@ export const toastsUniqueIds = [
     'folder-creation-error',
     'folder-deletion-success',
     'folder-deletion-error',
+    'folder-update-success',
+    'folder-update-error',
     'recipe-creation-success',
     'recipe-creation-error',
     'recipe-to-folder-success',
     'recipe-to-folder-error',
     'recipe-remove-success',
     'recipe-remove-error',
+    'recipe-remove-from-folder-success',
+    'recipe-remove-from-folder-error'
 ] as const
 
 const ToastContainer = () => {

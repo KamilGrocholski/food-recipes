@@ -1,4 +1,4 @@
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import Avatar from '../../common/Avatar'
 import Button from '../../common/Button'
 import Divider from '../../common/Divider'

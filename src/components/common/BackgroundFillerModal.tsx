@@ -11,7 +11,7 @@ const BackgroundFillerModal: React.FC<{
         return (
             <Transition appear show={isOpen} as={Fragment}>
 
-                <Dialog as='div' onClose={close}>
+                <Dialog as='div' onClose={close} className='z-40'>
                     <Transition.Child
                         as={Fragment}
                         enter="transition-opacity duration-75"
@@ -21,7 +21,7 @@ const BackgroundFillerModal: React.FC<{
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div className='transition-all duration-500 ease-in-out fixed inset-0 bg-black/70'></div>
+                        <div className='transition-all duration-500 z-40 ease-in-out fixed inset-0 bg-black/70'></div>
                     </Transition.Child>
                 </Dialog>
             </Transition>

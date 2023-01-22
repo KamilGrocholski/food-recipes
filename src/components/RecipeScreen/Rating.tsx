@@ -7,7 +7,7 @@ const RatingReadOnly: React.FC<{ rating: number, showValue: boolean }> = ({
 }) => {
 
     return (
-        <div className='flex flex-row items-center'>
+        <div className='flex flex-row items-center cursor-none'>
             <StarRating value={rating} stars={5} readOnly />
             {showValue ? <span className='text-lg'>({rating})</span> : null}
         </div>

@@ -1,7 +1,5 @@
 import { type FolderRouter } from "../../server/api/routers/folder"
 import RecipesListing from "../Recipe/RecipesListing"
-import folderHeaderImage from '../../assets/folder-header.jpg'
-import Image from "next/image"
 import { api } from "../../utils/api"
 import Button from "../common/Button"
 import { Icons } from "../../assets/icons"
@@ -10,9 +8,16 @@ import { useState } from "react"
 import Modal from "../common/Modal"
 import { useToastControls } from "../../hooks/useToastControls"
 import Link from "next/link"
+import { type SubmitErrorHandler, type SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { folderBase } from "../../server/schema/folder.schema"
+import Input from "../common/Input"
+import { z } from 'zod'
+import { type Folder } from "@prisma/client"
 
 const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (folder) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [isEditingName, setIsEditingName] = useState(false)
 
     const utils = api.useContext()
     const router = useRouter()
@@ -67,7 +72,21 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
                     height={300}
                     className='blur-sm'
                 /> */}
-                <h1 className='mr-3'>{folder.name}</h1>
+                {isEditingName ?
+                    <FolderNameEdit
+                        folderId={folder.id}
+                        onCancel={() => setIsEditingName(false)}
+                        onSave={() => setIsEditingName(false)}
+                    />
+                    : <h1 className='mr-3'>{folder.name}</h1>}
+                {!isEditingName ?
+                    <Button
+                        content={Icons.pencil}
+                        variant='ghost'
+                        size='sm'
+                        shape='circle'
+                        onClick={() => setIsEditingName(true)}
+                    /> : null}
                 <Button
                     content={Icons.trash}
                     variant='error'
@@ -79,7 +98,7 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
             </div>
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
             {folder.recipes.length === 0
-                ? <div>
+                ? <div className='mx-3'>
                     <span>
                         This collection has no recipes,
                         <Link href='/'>
@@ -97,3 +116,81 @@ const FolderScreen: React.FC<NonNullable<FolderRouter['getOneWithRecipes']>> = (
 }
 
 export default FolderScreen
+
+interface FolderNameEditProps {
+    onCancel: () => void
+    onSave: () => void
+    folderId: Folder['id']
+}
+
+const FolderNameEdit: React.FC<FolderNameEditProps> = ({
+    onCancel,
+    onSave,
+    folderId
+}) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<{ name: string }>({
+        resolver: zodResolver(z.object({
+            name: folderBase.name
+        }))
+    })
+
+    const utils = api.useContext()
+
+    const { show } = useToastControls()
+
+    const updateNameMutation = api.folder.updateName.useMutation({
+        onSuccess: () => {
+            onSave()
+            show('folder-update-success')
+            void utils.folder.getAllByCurrentUserId.invalidate()
+            void utils.folder.getOneWithRecipes.invalidate({ id: folderId })
+        },
+        onError: () => {
+            show('folder-update-error')
+        }
+    })
+
+    const handleOnValid: SubmitHandler<{ name: string }> = (data, e) => {
+        e?.preventDefault()
+        updateNameMutation.mutate({
+            id: folderId,
+            name: data.name
+        })
+    }
+
+    const handleOnError: SubmitErrorHandler<{ name: string }> | undefined = (data, e) => {
+        e?.preventDefault()
+        console.log(data)
+    }
+
+    return (
+        <form
+            className='flex flex-col space-y-1'
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onSubmit={handleSubmit(handleOnValid, handleOnError)}
+        >
+            <Input
+                {...register('name')}
+                errorMessage={errors.name?.message}
+            />
+            <div className='flex flex-row space-x-1'>
+                <Button
+                    type='submit'
+                    content={Icons.check}
+                    size='sm'
+                    variant='primary'
+                />
+                <Button
+                    content={Icons.xMark}
+                    onClick={onCancel}
+                    size='sm'
+                    variant='ghost'
+                />
+            </div>
+        </form>
+    )
+}

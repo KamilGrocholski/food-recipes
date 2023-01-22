@@ -38,10 +38,10 @@ export const tagSchema = z.object({
 
 export const instructionBase = {
     id: z.number(),
-    number: z.number().min(1).max(100),
+    number: z.number().min(0).max(100),
     description: z.string().trim()
         .min(1, {message: 'Min. 1 character'})
-        .max(255, {message: 'Max. 255 characters'})
+        .max(555, {message: 'Max. 555 characters'})
 }
 
 export const instructionSchema = z.object({
@@ -72,7 +72,7 @@ export const infoBase = {
         .min(5, {message: 'Min. 5 character'})
         .max(55, {message: 'Max. 55 characters'}),
     description: z.string().trim()
-        .max(255, {message: 'Max. 255 character'}),
+        .max(555, {message: 'Max. 555 character'}),
     image: z.string(),
     cookTimeInMin: z.number()
         .min(0, {message: 'Min. 1 minute'})

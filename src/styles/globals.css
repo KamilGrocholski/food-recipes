@@ -25,19 +25,17 @@
     .recipes-listing {
         @apply grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mx-3
     }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+      /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
 }
 
 @layer utilities {
-    @variants responsive {
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
-      }
-    }
 }

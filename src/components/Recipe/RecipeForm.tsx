@@ -12,6 +12,8 @@ import React, { useEffect, useState } from 'react'
 import ImageUploader from '../common/ImageUploader'
 import { useToastControls } from '../../hooks/useToastControls'
 
+const RECIPE_IMAGE_MAX_SIZE = 1 * 1024 * 1024
+
 const RecipeForm: React.FC = () => {
     const { show } = useToastControls()
 
@@ -35,7 +37,7 @@ const RecipeForm: React.FC = () => {
                 { description: '' }
             ],
             instructions: [
-                { description: '' }
+                { description: '', number: 0 }
             ]
         }
     })
@@ -113,8 +115,8 @@ const RecipeForm: React.FC = () => {
 
                 <Divider />
 
-                <section className='flex lg:flex-row flex-col justify-between'>
-                    <div>
+                <section className='flex lg:flex-row flex-col lg:justify-between'>
+                    <div className='lg:w-2/4 w-full mx-auto lg:mr-auto lg:ml-0'>
                         <Input
                             type='text'
                             label='Title'
@@ -126,13 +128,14 @@ const RecipeForm: React.FC = () => {
                             label='Description'
                             placeholder='Description'
                             {...register('description')}
+                            inputSize='lg'
                             errorMessage={errors.description?.message}
                         />
                     </div>
                     <div>
                         {/* <p className='label label-error'>{errors.image?.message}</p> */}
                         <Input {...register('image')} errorMessage={errors.image?.message} className='hidden' />
-                        <ImageUploader storeImageFn={setRecipeImage} image={recipeImage} maxSize={1 * 1024 * 1024} />
+                        <ImageUploader storeImageFn={setRecipeImage} image={recipeImage} maxSize={RECIPE_IMAGE_MAX_SIZE} />
                     </div>
                 </section>
 

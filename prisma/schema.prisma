@@ -80,6 +80,8 @@ model Tag {
     id      Int      @id @default(autoincrement())
     name    String   @unique
     recipes Recipe[]
+
+    @@index([name])
 }
 
 model Instruction {
@@ -112,6 +114,9 @@ model Recipe {
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
     viewsCounterId Int?
+
+    @@index([id])
+    @@index([title])
 }
 
 model Review {

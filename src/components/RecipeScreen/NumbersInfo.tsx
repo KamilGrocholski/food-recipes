@@ -14,8 +14,13 @@ const NumbersInfo: React.FC<Pick<RecipePublicQueryOutput, '_count' | 'cookTimeIn
             </div>
 
             <div className="stat">
-                <div className="stat-value text-center">{prepTimeInMin + cookTimeInMin}</div>
-                <div className='stat-desc'>Minutes</div>
+                <div className="stat-value text-center">{prepTimeInMin}</div>
+                <div className='stat-desc'>Prep time</div>
+            </div>
+
+            <div className="stat">
+                <div className="stat-value text-center">{cookTimeInMin}</div>
+                <div className='stat-desc'>Cook time</div>
             </div>
 
         </div>

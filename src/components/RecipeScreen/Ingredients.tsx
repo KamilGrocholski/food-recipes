@@ -8,11 +8,11 @@ const Ingredients: React.FC<{
         return (
             <section className='prose'>
                 <h2>Ingredients</h2>
-                <ul className='flex flex-col'>
+                <ul className='list-disc'>
                     {ingredients.map((ingredient, i) => (
-                        <p key={i} className='flex flex-row items-start space-x-1'>
-                            <span className='break-all'>{ingredient.description}</span>
-                        </p>
+                        <li key={i}>
+                            {ingredient.description}
+                        </li>
                     ))}
                 </ul>
             </section>

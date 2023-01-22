@@ -14,7 +14,7 @@ const AppContent: React.FC<{ children: JSX.Element | JSX.Element[], useContainer
     return (
         <div className='flex flex-col max-h-screen mx-auto h-full w-full z-0'>
             <SearchModal isOpen={isSearchModalOpen} close={() => setIsSearchModalOpen(false)} />
-            <div className='scrollbar scrollbar-thumb-primary min-h-screen overflow-y-scroll overflow-x-hidden'>
+            <div className='scrollbar-thumb-primary scrollbar-thin min-h-screen overflow-y-scroll overflow-x-hidden'>
                 {width >= 1024 ? <DecoratingSearchInput /> : <AppContentHeader />}
                 <div className={`min-h-screen ${useContainer ? 'container mx-auto' : ''}`}>
                     {children}

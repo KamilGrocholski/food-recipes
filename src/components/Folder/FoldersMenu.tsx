@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Icons } from "../../assets/icons"
 import { useToastControls } from "../../hooks/useToastControls"
 import { api } from "../../utils/api"
+// import Button from "../common/Button"
 import Input from "../common/Input"
 import StateWrapper from "../common/StateWrapper"
 import FoldersListing from "./FoldersListing"
@@ -23,18 +24,22 @@ const FoldersMenu = () => {
         }
     })
 
-    const handleCreateFolder = () => {
-        folderCreateMutation.mutate({
-            name: newName
-        })
-    }
+    // const handleCreateFolder = (e: React.MouseEvent<HTMLButtonElement>) => {
+    //     e.nativeEvent.preventDefault()
+    //     e.preventDefault()
+    //     folderCreateMutation.mutate({
+    //         name: newName
+    //     })
+    // }
 
     const [newName, setNewName] = useState<string>('')
     const [isCreating, setIsCreating] = useState<boolean>(false)
 
     const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            handleCreateFolder()
+            folderCreateMutation.mutate({
+                name: newName
+            })
         }
         if (e.key === 'Escape') {
             setIsCreating(false)
@@ -52,7 +57,6 @@ const FoldersMenu = () => {
                         onChange={e => setNewName(e.target.value)}
                         inputSize='xs'
                         variant='primary'
-                        className='w-fit'
                         onKeyDown={handleOnKeyDown}
                         onBlur={() => setIsCreating(false)}
                         disabled={folderCreateMutation.isLoading}
