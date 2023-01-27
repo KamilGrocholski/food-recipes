@@ -52,7 +52,13 @@ npm install
 2. Set the required env variables inside
 ```
 
-4. Run the app
+4. Prisma
+
+```bash
+npx prisma db push
+```
+
+5. Run the app
 
 ```bash
 npm run dev
