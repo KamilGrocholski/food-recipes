@@ -18,9 +18,9 @@ const FoldersListing: React.FC<{
 
         return (
             <div className='flex flex-col space-y-2'>
-                {folders.map((folder, index) => (
+                {folders.map((folder) => (
                     <div
-                        key={index}
+                        key={folder.id}
                         onClick={() => handleOpenFolder(folder.id)}
                         className='group hover:cursor-pointer'
                     >

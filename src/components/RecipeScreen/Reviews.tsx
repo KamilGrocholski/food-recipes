@@ -23,8 +23,8 @@ const Reviews: React.FC<Pick<Recipe_GetOneById_Output, 'reviews' | 'id' | '_coun
             <h2>Reviews({_count.reviews})</h2>
             <ReviewCreation id={id} />
             <div className='flex flex-col space-y-16'>
-                {reviews.map((review, i) => (
-                    <div key={i}>
+                {reviews.map((review) => (
+                    <div key={review.id}>
                         <div className='flex flex-row space-x-2'>
                             <Avatar src={review.author.image} />
                             <div className='flex flex-col space-y-3'>

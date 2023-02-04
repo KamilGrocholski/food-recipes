@@ -111,7 +111,7 @@ const ToastContainer = () => {
     return (
         <div className="toast toast-end z-50">
             {toasts.toasts.map((toast, index) => (
-                <Toast key={index} {...toast} />
+                <Toast key={toast.uniqueId} {...toast} />
             ))}
         </div>
     )

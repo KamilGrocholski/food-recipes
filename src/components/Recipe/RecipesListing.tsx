@@ -12,8 +12,8 @@ const RecipesListing: React.FC<{
         <section className='recipes-listing'>
 
             {/* <div className='flex flex-wrap mx-auto w-fit gap-3'> */}
-            {recipes.map((recipe, index) => (
-                <RecipeCard key={index} recipe={recipe} options={options} />
+            {recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={recipe} options={options} />
             ))}
         </section>
     )

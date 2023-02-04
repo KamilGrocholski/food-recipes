@@ -107,7 +107,7 @@ const AddToRecipeToFolderModal: React.FC<{
                                             <div className='overflow-y-scroll max-h-[30vh] flex flex-col space-y-2 p-3 my-3'>
                                                 {filteredFolders.map((folder, index) => (
                                                     <FolderCheckbox
-                                                        key={index}
+                                                        key={folder.id}
                                                         id={folder.id}
                                                         name={folder.name}
                                                         onChange={handleCheckChange}

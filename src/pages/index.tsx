@@ -57,8 +57,8 @@ const Home: NextPage = () => {
         >
           <div className='recipes-listing'>
             {infiniteRecipesQuery.data?.pages.map((page) => (
-              page.recipes.map((recipe, index) => (
-                <RecipeCard recipe={recipe} key={index} />
+              page.recipes.map((recipe) => (
+                <RecipeCard recipe={recipe} key={recipe.id} />
               ))
             ))}
           </div>
